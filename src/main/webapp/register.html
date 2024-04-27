@@ -1,11 +1,14 @@
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
     <head>
         <title>Registation</title>
-        <link rel="stylesheet" href="css/style.css" />
+        <link rel="stylesheet" href="css/login.css" />
     </head>
     <body>
         <div class="outer-form">
             <div>
+                <div class="error-container" th:if="${error}">
+                    <p th:text="${errorMessage}">The passwords do not correspond</p>
+                </div>
                 <div class="login-form">
                     <h1>Register</h1>
                     <form method="post" action="/register">

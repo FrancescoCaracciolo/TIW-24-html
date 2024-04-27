@@ -1,14 +1,17 @@
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
     <head>
         <title>Login</title>
-        <link rel="stylesheet" href="css/style.css" />
+        <link rel="stylesheet" href="css/login.css" />
     </head>
     <body>
         <div class="outer-form">
             <div>
+                <div class="error-container" th:if="${error}">
+                    <p th:text="${errorMessage}">Bad username or password</p>
+                </div>
                 <div class="login-form">
                     <h1>Log in</h1>
-                    <form method="post" action="/register">
+                    <form method="post" action="/login">
                         <label class="login-label">E-mail / Username</label>
                         <br />
                         <input class="login-input" type="email" name="email" />

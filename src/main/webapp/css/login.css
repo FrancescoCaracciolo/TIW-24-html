@@ -1,0 +1,61 @@
+@import url("style.css");
+
+/* login form properties */
+
+.outer-form {
+    /* Properties to get vertical center align*/
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.error-container {
+    border: 2px solid var(--error-outline);
+    background-color: var(--error-backgorund);
+    color: var(--error-fg-color);
+    text-align: center;
+    padding: 2px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.login-form {
+    /* colors and style */
+    background-color: var(--primary-container);
+    border-radius: 10px;
+    /* positioning */
+    width: 420px;
+    padding: 15px;
+    margin: auto;
+    /*content alignment*/
+    justify-content: center;
+    text-align: center;
+}
+
+.login-label {
+    font-size: 20px;
+    color: var(--fg-color);
+    text-align: left;
+    padding-bottom: 2px;
+    font-family: roboto;
+}
+
+.login-input {
+    font-size: 24px;
+    border: none;
+    text-align: start;
+    border-radius: 3px;
+    box-shadow: 0 0 2px black;
+    margin-bottom: 3px;
+}
+
+.login-input:focus {
+    outline: none !important;
+    border:1px solid var(--accent-bg-color);
+    box-shadow: 0 0 2px var(--accent-bg-color);
+}
+
+.extra-text {
+    text-align: center;
+}

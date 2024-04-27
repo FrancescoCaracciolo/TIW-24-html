@@ -3,11 +3,12 @@
     --fg-color: #4c4f69;
     --accent-bg-color: #4C4F69;
     --accent-fg-color: #D3E0E8;
-    --red: #d20f39;
-    --light-red: #dd7878;
     --primary-container: #DBE0E8;
     --secondary-container: #CCD0DA;
     --link-color: #A092F3;
-
+    --error-outline: #d20f39;
+    --error-background: #fff6f5;
+    --error-fg-color: #000000;
+    --transparent: rgba(0, 0, 0, 0);
 
 }
