@@ -4,7 +4,7 @@
 	version="4.0">
 	<context-param>
 		<param-name>dbUrl</param-name>
-		<param-value>jdbc:mysql://localhost:3306/dbtest?serverTimezone=UTC</param-value>
+		<param-value>jdbc:mysql://localhost:3306/tiw_db?serverTimezone=UTC</param-value>
 	</context-param>
 	<context-param>
 		<param-name>dbUser</param-name>
@@ -18,21 +18,4 @@
 		<param-name>dbDriver</param-name>
 		<param-value>com.mysql.cj.jdbc.Driver</param-value>
 	</context-param>
-  
-	<servlet>
-		<servlet-name>TestServlet</servlet-name>
-		<servlet-class>it.polimi.tiw.test.TestServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>TestServlet</servlet-name>
-		<url-pattern>/TestServlet</url-pattern>
-	</servlet-mapping>
-		<servlet>
-		<servlet-name>TestJdbc</servlet-name>
-		<servlet-class>it.polimi.tiw.test.TestJdbc</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>TestJdbc</servlet-name>
-		<url-pattern>/TestJdbc</url-pattern>
-	</servlet-mapping>
 </web-app>
