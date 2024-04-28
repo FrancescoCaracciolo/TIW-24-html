@@ -9,9 +9,9 @@ DROP TABLE IF EXISTS person;
 
 -- CREATE all TABLEs
 CREATE TABLE person (
-	username CHAR(20),
+	username VARCHAR(20),
     email VARCHAR(255) UNIQUE NOT NULL,
-    password_hash VARCHAR(30) NOT NULL,
+    password_hash VARCHAR(60) NOT NULL,
     
     PRIMARY KEY (username)
 );

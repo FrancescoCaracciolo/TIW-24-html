@@ -20,6 +20,7 @@ import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import it.polimi.tiw.dao.Person;
 import it.polimi.tiw.dao.PersonDAO;
 
@@ -93,10 +94,19 @@ public class SignupServlet extends HttpServlet {
 				} else if (personFromEmail.isPresent()) {
 					invalidFormData("The email is already taken", request, response, ctx);
 				} else { 
-					// Form valid, then create the user and go to the homepage 
+					// Form valid
+					
+					// Hash and salt password
+					String hashedPassword = BCrypt.withDefaults().hashToString(12, password.toCharArray());
+					
+					// Create and save the new user
+					Person newPerson = new Person(username, email, hashedPassword);
+					personDAO.save(newPerson);
+					
+					// Redirect to signin page
+					response.sendRedirect("signin");
 				}
-			} catch (SQLException e) {
-				invalidFormData("SQL error: " + e.getMessage(), request, response, ctx);
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} 
