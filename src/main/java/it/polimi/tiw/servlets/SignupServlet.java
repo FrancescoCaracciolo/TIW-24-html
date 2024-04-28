@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -20,9 +19,9 @@ import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
-import at.favre.lib.crypto.bcrypt.BCrypt;
 import it.polimi.tiw.dao.Person;
 import it.polimi.tiw.dao.PersonDAO;
+import it.polimi.tiw.utils.SignUtility;
 
 @WebServlet("/signup")
 public class SignupServlet extends HttpServlet {
@@ -39,14 +38,15 @@ public class SignupServlet extends HttpServlet {
 	public void init() throws ServletException {
 		ServletContext servletContext = getServletContext();
 		
+		// Initialize and setup the TemplateEngine
 		ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
 		templateResolver.setTemplateMode(TemplateMode.HTML);
-		
-		this.templateEngine = new TemplateEngine();
-		this.templateEngine.setTemplateResolver(templateResolver);
+		templateEngine = new TemplateEngine();
+		templateEngine.setTemplateResolver(templateResolver);
 		templateResolver.setSuffix(".html");
 	
 		try {
+			// Retrieve database parameters and connect
 			String driver = servletContext.getInitParameter("dbDriver");
 			String url = servletContext.getInitParameter("dbUrl");
 			String user = servletContext.getInitParameter("dbUser");
@@ -77,27 +77,29 @@ public class SignupServlet extends HttpServlet {
 		String repeatedPassword = request.getParameter("repeat-password");
 		
 		WebContext ctx = new WebContext(request, response, getServletContext(), response.getLocale());
+		
+		SignUtility util = new SignUtility(response, templateEngine, ctx, "signup");
 
-		if (isNullOrBlank(username) || isNullOrBlank(email) || isNullOrBlank(password) || isNullOrBlank(repeatedPassword)) {
-			invalidFormData("Some fields are empty", request, response, ctx);
+		if (SignUtility.isNullOrBlank(username) || SignUtility.isNullOrBlank(email) || SignUtility.isNullOrBlank(password) || SignUtility.isNullOrBlank(repeatedPassword)) {
+			util.invalidFormData("Some fields are empty");
 		} else if (!password.equals(repeatedPassword)) {
-			invalidFormData("The passwords are not equal", request, response, ctx);
-		} else if (!isEmailValid(email)) {
-			invalidFormData("The email is not valid", request, response, ctx);
+			util.invalidFormData("The passwords are not equal");
+		} else if (!SignUtility.isEmailValid(email)) {
+			util.invalidFormData("The email is not valid");
 		} else {
 			try {
 				Optional<Person> personFromEmail = personDAO.getFromEmail(email);
 				Optional<Person> personFromUsername = personDAO.get(username);
 				
 				if (personFromUsername.isPresent()) {
-					invalidFormData("The username is already taken", request, response, ctx);
+					util.invalidFormData("The username is already taken");
 				} else if (personFromEmail.isPresent()) {
-					invalidFormData("The email is already taken", request, response, ctx);
+					util.invalidFormData("The email is already taken");
 				} else { 
 					// Form valid
 					
 					// Hash and salt password
-					String hashedPassword = BCrypt.withDefaults().hashToString(12, password.toCharArray());
+					String hashedPassword = SignUtility.hashAndSalt(password);
 					
 					// Create and save the new user
 					Person newPerson = new Person(username, email, hashedPassword);
@@ -110,23 +112,5 @@ public class SignupServlet extends HttpServlet {
 				e.printStackTrace();
 			}
 		} 
-	}
-	
-	// Utility methods
-	private boolean isEmailValid(String email) {
-		// RFC 5322 regular expression for email address validation
-		String regexPattern = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
-	    
-	    return Pattern.compile(regexPattern).matcher(email).matches();
-	}
-	private boolean isNullOrBlank(String string) {
-		return string == null || string.isBlank();
-	}
-	
-	private void invalidFormData(String errorMessage, HttpServletRequest request, HttpServletResponse response, WebContext ctx) throws IOException {
-		ctx.setVariable("error", true);
-		ctx.setVariable("errorMessage", errorMessage);
-		
-		templateEngine.process("signup", ctx, response.getWriter());
 	}
 }
