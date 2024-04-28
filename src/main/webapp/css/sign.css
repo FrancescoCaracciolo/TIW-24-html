@@ -1,6 +1,6 @@
 @import url("style.css");
 
-/* login form properties */
+/* sign in and sign up forms properties */
 
 .outer-form {
     /* Properties to get vertical center align*/
@@ -21,7 +21,7 @@
     margin-bottom: 10px;
 }
 
-.login-form {
+.sign-form {
     /* colors and style */
     background-color: var(--primary-container);
     border-radius: 10px;
@@ -33,7 +33,7 @@
     text-align: center;
 }
 
-.login-label {
+.sign-label {
     font-size: 20px;
     color: var(--fg-color);
     text-align: left;
@@ -41,7 +41,7 @@
     font-family: roboto;
 }
 
-.login-input {
+.sign-input {
     font-size: 24px;
     border: none;
     text-align: start;
@@ -51,7 +51,7 @@
     border: 1px solid var(--transparent);
 }
 
-.login-input:focus {
+.sign-input:focus {
     outline: none !important;
     border:1px solid var(--accent-bg-color);
     box-shadow: 0 0 2px var(--accent-bg-color);
