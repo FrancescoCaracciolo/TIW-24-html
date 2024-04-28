@@ -17,7 +17,7 @@ public class PersonDAO implements DAO<Person, String> {
 	public PersonDAO(Connection dbConnection) throws SQLException {
 		this.dbConnection = dbConnection;
 		
-		saveStatement = dbConnection.prepareStatement("INSERT INTO person (username, email, hash_password) VALUES (?, ?, ?);");
+		saveStatement = dbConnection.prepareStatement("INSERT INTO person (username, email, password_hash) VALUES (?, ?, ?);");
 		updateStatement = dbConnection.prepareStatement("UPDATE person SET username=?, email=?, password_hash=? WHERE username=?;");
 		deleteStatement = dbConnection.prepareStatement("DELETE FROM person WHERE username=?;");
 		getStatement = dbConnection.prepareStatement("SELECT * FROM person WHERE username=?;");
