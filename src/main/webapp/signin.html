@@ -12,12 +12,12 @@
                 <div class="error-container" th:if="${error}">
                     <p th:text="${errorMessage}">Wrong username/email or password</p>
                 </div>
-                <div class="signin-form">
+                <div class="sign-form">
                     <h1>Sign in</h1>
-                    <form method="post" action="/signin">
+                    <form method="post" action="signin">
                         <label class="sign-label">E-mail / Username</label>
                         <br />
-                        <input class="sign-input" type="email" name="email" />
+                        <input class="sign-input" type="text" name="email-username" />
                         <br />
                         <label class="sign-label">Password</label>
                         <br />
@@ -26,7 +26,7 @@
                         <input type="submit" class="accent-button" value="Sign in" />
                     </form>
                 </div>
-                <p class="extra-text"> Don't have an account? <a href="signup.html">Register</a></p>
+                <p class="extra-text"> Don't have an account? <a href="signup">Register</a></p>
             </div>
         </div>
     </body>
