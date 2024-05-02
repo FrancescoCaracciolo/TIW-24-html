@@ -63,8 +63,8 @@ public class SignupServlet extends ThymeleafServlet {
 					String[] newPerson = {username, email, hashedPassword};
 					personDAO.save(newPerson);
 					
-					// Redirect to signin page
-					response.sendRedirect("signin");
+					// Redirect to homepage
+					response.sendRedirect("home");
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

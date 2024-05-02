@@ -47,6 +47,7 @@ public class SigninServlet extends ThymeleafServlet {
 				if (person.isPresent() && SignUtility.verifyEqualityToHash(password, person.get().getPasswordHash())) {
 					Person loggedPerson = person.get();
 					session.setAttribute("Id", loggedPerson.getId());
+					
 					response.sendRedirect("home");
 				} else {
 					util.invalidFormData("Wrong username/email or password");

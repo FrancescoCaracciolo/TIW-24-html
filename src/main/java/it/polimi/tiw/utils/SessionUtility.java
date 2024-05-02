@@ -22,21 +22,24 @@ public class SessionUtility {
 		this.session = session;
 	}
 	
-	public Optional<Person> getPerson(PersonDAO personDao) throws SQLException {
+	public Optional<Person> getPerson(PersonDAO personDAO) throws SQLException {
 		Integer id = (Integer) this.session.getAttribute("Id");
 		Optional<Person> result = Optional.empty();
+		
 		if (id == null) {
 			return result;
+		} else {
+			return personDAO.get(id);
 		}
-		result = personDao.get(id);
-		return result;
 	}
 	
-	public Optional<Person> redirectOnInvalidSession(HttpServletResponse response, PersonDAO personDao) throws SQLException, IOException {
-		Optional<Person> person = this.getPerson(personDao);
+	public Optional<Person> redirectOnInvalidSession(HttpServletResponse response, PersonDAO personDAO) throws SQLException, IOException {
+		Optional<Person> person = this.getPerson(personDAO);
+		
 		if (person.isEmpty()) {
-			response.sendRedirect("/signin");
-		} 
+			response.sendRedirect("signin");
+		}
+		
 		return person;
 	}
 	
