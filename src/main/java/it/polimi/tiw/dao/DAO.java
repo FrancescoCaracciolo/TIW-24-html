@@ -3,10 +3,10 @@ package it.polimi.tiw.dao;
 import java.sql.SQLException;
 import java.util.Optional;
 
-public interface DAO<T, IdOfT> {
-	Optional<T> get(IdOfT id) throws SQLException;
-
-	void save(T t) throws SQLException;
+public interface DAO<T, ID> {
+	Optional<T> get(ID id) throws SQLException;
+	
+	void save(String[] params) throws SQLException;
 
 	void update(T t, String[] params) throws SQLException;
 

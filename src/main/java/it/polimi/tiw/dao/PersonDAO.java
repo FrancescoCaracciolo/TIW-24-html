@@ -6,36 +6,42 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
-public class PersonDAO implements DAO<Person, String> {
+public class PersonDAO implements DAO<Person, Integer> {
 	private Connection dbConnection;
+	
 	private PreparedStatement saveStatement;
 	private PreparedStatement updateStatement;
 	private PreparedStatement deleteStatement;
-	private PreparedStatement getStatement;
+	private PreparedStatement getFromIdStatement;
+	private PreparedStatement getFromUsernameStatement;
 	private PreparedStatement getFromEmailStatement;
 	
 	public PersonDAO(Connection dbConnection) throws SQLException {
 		this.dbConnection = dbConnection;
 		
 		saveStatement = dbConnection.prepareStatement("INSERT INTO person (username, email, password_hash) VALUES (?, ?, ?);");
-		updateStatement = dbConnection.prepareStatement("UPDATE person SET username=?, email=?, password_hash=? WHERE username=?;");
-		deleteStatement = dbConnection.prepareStatement("DELETE FROM person WHERE username=?;");
-		getStatement = dbConnection.prepareStatement("SELECT * FROM person WHERE username=?;");
+		updateStatement = dbConnection.prepareStatement("UPDATE person SET username=?, email=?, password_hash=? WHERE id=?;");
+		deleteStatement = dbConnection.prepareStatement("DELETE FROM person WHERE id=?;");
+		getFromIdStatement = dbConnection.prepareStatement("SELECT * FROM person WHERE id=?;");
+		getFromUsernameStatement = dbConnection.prepareStatement("SELECT * FROM person WHERE username=?;");
 		getFromEmailStatement = dbConnection.prepareStatement("SELECT * FROM person WHERE email=?;");
 	}
 	
-	public Optional<Person> get(String username) throws SQLException {
-		getStatement.setString(1, username);
+	@Override
+	public Optional<Person> get(Integer id) throws SQLException {
+		getFromIdStatement.setInt(1, id);
 		
-		ResultSet result = getStatement.executeQuery();
+		ResultSet result = getFromIdStatement.executeQuery();
 		
-		// Check if the query fetched no rows
-		if (!result.isBeforeFirst())
-			return Optional.empty();
-		else {
-			Person fetchedPerson = personFromResult(result);
-			return Optional.ofNullable(fetchedPerson);
-		}
+		return personFromResult(result);
+	}
+	
+	public Optional<Person> getFromUsername(String username) throws SQLException {
+		getFromUsernameStatement.setString(1, username);
+		
+		ResultSet result = getFromUsernameStatement.executeQuery();
+		
+		return personFromResult(result);
 	}
 	
 	public Optional<Person> getFromEmail(String email) throws SQLException {
@@ -43,54 +49,69 @@ public class PersonDAO implements DAO<Person, String> {
 		
 		ResultSet result = getFromEmailStatement.executeQuery();
 		
-		// Check if the query fetched no rows
-		if (!result.isBeforeFirst())
-			return Optional.empty();
-		else {
-			Person fetchedPerson = personFromResult(result);
-			return Optional.ofNullable(fetchedPerson);
-		}
+		return personFromResult(result);
 	}
 
-	public void save(Person person) throws SQLException {
-		saveStatement.setString(1, person.getUsername());
-		saveStatement.setString(2, person.getEmail());
-		saveStatement.setString(3, person.getPasswordHash());
+	@Override
+	public void save(String[] params) throws SQLException {
+		saveStatement.setString(1, params[0]);
+		saveStatement.setString(2, params[1]);
+		saveStatement.setString(3, params[2]);
 		
 		saveStatement.executeUpdate();
 	}
 
+	@Override
 	public void update(Person person, String[] params) throws SQLException {
+		// Set new fields values
 		updateStatement.setString(1, params[0]);
 		updateStatement.setString(2, params[1]);
 		updateStatement.setString(3, params[2]);
-		updateStatement.setString(4, person.getUsername());
+		
+		// Set id field value
+		updateStatement.setInt(4, person.getId());
 		
 		updateStatement.executeUpdate();
 		
 	}
 
+	@Override
 	public void delete(Person person) throws SQLException {
-		deleteStatement.setString(1, person.getUsername());
+		// Set id field value
+		deleteStatement.setInt(1, person.getId());
 		
 		deleteStatement.executeUpdate();
-		
 	}
 
+	@Override
 	public void close() throws SQLException {
+		getFromIdStatement.close();
+		getFromUsernameStatement.close();
+		getFromEmailStatement.close();
 		saveStatement.close();
 		updateStatement.close();
 		deleteStatement.close();
 	}
 
-	// Utility methods
-	private Person personFromResult(ResultSet resultSet) throws SQLException {
-		resultSet.next();
-		
-		String fetchedUsername = resultSet.getString("username");
-		String fetchedEmail = resultSet.getString("email");
-		String fetchedPasswordHash = resultSet.getString("password_hash");
-		
-		return new Person(fetchedUsername, fetchedEmail, fetchedPasswordHash);
+	// Utility method
+	private Optional<Person> personFromResult(ResultSet result) throws SQLException {
+		// If the query fetched no rows
+		if (!result.isBeforeFirst())
+			return Optional.empty();
+		// If the query fetched some rows (should be one)
+		else {
+			// Move the result index to the first row
+			result.next();
+			
+			// Fetch values
+			int fetchedId = result.getInt("id");
+			String fetchedUsername = result.getString("username");
+			String fetchedEmail = result.getString("email");
+			String fetchedPasswordHash = result.getString("password_hash");
+			
+			Person fetchedPerson = new Person(fetchedId, fetchedUsername, fetchedEmail, fetchedPasswordHash);
+			
+			return Optional.ofNullable(fetchedPerson);
+		}
 	}
 }

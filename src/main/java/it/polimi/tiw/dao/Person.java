@@ -1,11 +1,13 @@
 package it.polimi.tiw.dao;
 
 public class Person {
+	private int id;
 	private String username;
 	private String email;
 	private String passwordHash;
 	
-	public Person(String username, String email, String passwordHash) {
+	public Person(int id, String username, String email, String passwordHash) {
+		this.id = id;
 		this.username = username;
 		this.email = email;
 		this.passwordHash = passwordHash;
@@ -21,6 +23,10 @@ public class Person {
 	
 	public void setPasswordHash(String passwordHash) {
 		this.passwordHash = passwordHash;
+	}
+	
+	public int getId() {
+		return id;
 	}
 	
 	public String getUsername() {
