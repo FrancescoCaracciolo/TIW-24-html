@@ -8,7 +8,7 @@ public interface DAO<T, ID> {
 	
 	void save(String[] params) throws SQLException;
 
-	void update(T t, String[] params) throws SQLException;
+	void update(T t) throws SQLException;
 
 	void delete(T t) throws SQLException;
 	

@@ -29,19 +29,20 @@ public class PersonDAO implements DAO<Person, Integer> {
 		getFromEmailOrUsername = dbConnection.prepareStatement("SELECT * FROM person WHERE username = ? or email = ?");
 	}
 	
-	public Optional<Person> getFromEmailOrUsername(String emailOrUsername) throws SQLException {
-		getFromEmailOrUsername.setString(1, emailOrUsername);
-		getFromEmailOrUsername.setString(2, emailOrUsername);
-		
-		ResultSet result = getFromEmailOrUsername.executeQuery();
-		
-		return personFromResult(result);
-	}
 	@Override
 	public Optional<Person> get(Integer id) throws SQLException {
 		getFromIdStatement.setInt(1, id);
 		
 		ResultSet result = getFromIdStatement.executeQuery();
+		
+		return personFromResult(result);
+	}
+	
+	public Optional<Person> getFromEmailOrUsername(String emailOrUsername) throws SQLException {
+		getFromEmailOrUsername.setString(1, emailOrUsername);
+		getFromEmailOrUsername.setString(2, emailOrUsername);
+		
+		ResultSet result = getFromEmailOrUsername.executeQuery();
 		
 		return personFromResult(result);
 	}
@@ -72,17 +73,16 @@ public class PersonDAO implements DAO<Person, Integer> {
 	}
 
 	@Override
-	public void update(Person person, String[] params) throws SQLException {
+	public void update(Person person) throws SQLException {
 		// Set new fields values
-		updateStatement.setString(1, params[0]);
-		updateStatement.setString(2, params[1]);
-		updateStatement.setString(3, params[2]);
+		updateStatement.setString(1, person.getUsername());
+		updateStatement.setString(2, person.getEmail());
+		updateStatement.setString(3, person.getPasswordHash());
 		
 		// Set id field value
 		updateStatement.setInt(4, person.getId());
 		
 		updateStatement.executeUpdate();
-		
 	}
 
 	@Override
