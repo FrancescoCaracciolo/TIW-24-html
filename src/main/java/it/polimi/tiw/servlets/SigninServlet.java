@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.thymeleaf.context.WebContext;
 import it.polimi.tiw.dao.Person;
@@ -31,6 +32,7 @@ public class SigninServlet extends ThymeleafServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String emailOrUsername = request.getParameter("email-username");
 		String password = request.getParameter("password");
+		HttpSession session = request.getSession();
 		
 		WebContext ctx = new WebContext(request, response, getServletContext(), response.getLocale());
 
@@ -40,13 +42,12 @@ public class SigninServlet extends ThymeleafServlet {
 			util.invalidFormData("Some fields are empty");
 		} else {
 			try {
-				Optional<Person> personFromEmail = personDAO.getFromEmail(emailOrUsername);
-				Optional<Person> personFromUsername = personDAO.getFromUsername(emailOrUsername);
+				Optional<Person> person = personDAO.getFromEmailOrUsername(emailOrUsername);
 				
-				if (personFromEmail.isPresent() && SignUtility.verifyEqualityToHash(password, personFromEmail.get().getPasswordHash())) {
-					// TODO: Create session and redirect to homepage
-				} else if (personFromUsername.isPresent() && SignUtility.verifyEqualityToHash(password, personFromUsername.get().getPasswordHash())) {
-					// TODO: Create session and redirect to homepage
+				if (person.isPresent() && SignUtility.verifyEqualityToHash(password, person.get().getPasswordHash())) {
+					Person loggedPerson = person.get();
+					session.setAttribute("Id", loggedPerson.getId());
+					response.sendRedirect("home");
 				} else {
 					util.invalidFormData("Wrong username/email or password");
 				}
