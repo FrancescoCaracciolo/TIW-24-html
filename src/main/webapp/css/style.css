@@ -9,14 +9,19 @@ body {
     color: var(--fg-color);
 }
 
+.navbar {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: flex-end;
+}
+
 a:link {
     color: var(--link-color);
 }
 
-.accent-button {
+.button {
     /* colors and style */
-    background-color: var(--accent-bg-color);
-    color: var(--accent-fg-color);
     transition: background-color cubic-bezier(0.075, 0.82, 0.165, 1) 1s, border cubic-bezier(0.075, 0.82, 0.165, 1) 1s;
     border: 1px solid var(--transparent);
     border-radius: 8px;
@@ -30,13 +35,29 @@ a:link {
     padding: 16px 32px;
 }
 
+.accent-button {
+    background-color: var(--accent-bg-color);
+    color: var(--accent-fg-color);
+}
+
 .accent-button:hover {
     background-color: var(--secondary-container);
     color: var(--accent-bg-color);
     border: 1px solid var(--accent-bg-color);
 }
 
-h1 {
+.destructive-button {
+    background-color: var(--error-outline);
+    color: var(--accent-fg-color);
+}
+
+.destructive-button:hover {
+    background-color: var(--secondary-container);
+    color: var(--error-outline);
+    border: 1px solid var(--error-outline);
+
+}
+h1, h2, h3, h4, h5, h6 {
     font-family: roboto;
     font-weight: 500;
 }

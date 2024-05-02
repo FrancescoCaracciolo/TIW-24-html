@@ -1,0 +1,119 @@
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Home</title>
+        <link rel="stylesheet" href="css/home.css">
+        <!-- Set a viewport to make the design responsive -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div class="navbar">
+            <h1 th:text="${user.username}">Oingo</h1>
+            <a href="/logout" style="margin-right: 3px; margin-left: 10px;">
+                <button class="button destructive-button">Log out</button>
+            </a>
+        </div>
+        <div class="feed">
+            <div class="album-container">
+                <h2>Your albums</h2>
+                <div class="album-grid" th:remove="all-but-first">
+                    <div class="album-card" th:object="${album}" th:each="album : ${userAlbums}">
+                        <div class="thumbnail-container">
+                            <img class="album-thumbnail" th:src="*{thumbnail}" src="img/test-portrait.jpg" />
+                        </div>
+                        <h3 th:text="*{name}">Album Name</h3>
+                        <h4 th:text="*{author.username}">by: Dio</h5>
+                        <h5 th:text="*{date}">22/04/1992</h5>
+                    </div>
+                    <div class="album-card" th:object="${album}" th:each="album : ${userAlbums}">
+                        <div class="thumbnail-container">
+                            <img class="album-thumbnail" th:src="*{thumbnail}" src="img/test-portrait.jpg" />
+                        </div>
+                        <h3 th:text="*{name}">Album Name</h3>
+                        <h4 th:text="*{author.username}">by: Dio</h5>
+                        <h5 th:text="*{date}">22/04/1992</h5>
+                    </div>
+                    <div class="album-card" th:object="${album}" th:each="album : ${userAlbums}">
+                        <div class="thumbnail-container">
+                            <img class="album-thumbnail" th:src="*{thumbnail}" src="img/test-portrait.jpg" />
+                        </div>
+                        <h3 th:text="*{name}">Album Name</h3>
+                        <h4 th:text="*{author.username}">by: Dio</h5>
+                        <h5 th:text="*{date}">22/04/1992</h5>
+                    </div>
+                    <div class="album-card" th:object="${album}" th:each="album : ${userAlbums}">
+                        <div class="thumbnail-container">
+                            <img class="album-thumbnail" th:src="*{thumbnail}" src="img/test-portrait.jpg" />
+                        </div>
+                        <h3 th:text="*{name}">Album Name</h3>
+                        <h4 th:text="*{author.username}">by: Dio</h5>
+                        <h5 th:text="*{date}">22/04/1992</h5>
+                    </div>
+                    <div class="album-card" th:object="${album}" th:each="album : ${userAlbums}">
+                        <div class="thumbnail-container">
+                            <img class="album-thumbnail" th:src="*{thumbnail}" src="img/test-portrait.jpg" />
+                        </div>
+                        <h3 th:text="*{name}">Album Name</h3>
+                        <h4 th:text="*{author.username}">by: Dio</h5>
+                        <h5 th:text="*{date}">22/04/1992</h5>
+                    </div>
+                    <div class="album-card" th:object="${album}" th:each="album : ${userAlbums}">
+                        <div class="thumbnail-container">
+                            <img class="album-thumbnail" th:src="*{thumbnail}" src="img/test-portrait.jpg" />
+                        </div>
+                        <h3 th:text="*{name}">Album Name</h3>
+                        <h4 th:text="*{author.username}">by: Dio</h5>
+                        <h5 th:text="*{date}">22/04/1992</h5>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="album-container">
+                <h2>Other users' albums</h2>
+                <div class="album-grid" th:remove="all-but-first">
+                    <div class="album-card" th:object="${album}" th:each="album : ${othersAlbums}">
+                        <div class="thumbnail-container">
+                            <img class="album-thumbnail" th:src="*{thumbnail}" src="img/test-portrait.jpg" />
+                        </div>
+                        <h3 th:text="*{name}">Album Name</h3>
+                        <h4 th:text="*{author.username}">by: Dio</h5>
+                        <h5 th:text="*{date}">22/04/1992</h5>
+                    </div>
+                    <div class="album-card" th:object="${album}" th:each="album : ${userAlbums}">
+                        <div class="thumbnail-container">
+                            <img class="album-thumbnail" th:src="*{thumbnail}" src="img/test-portrait.jpg" />
+                        </div>
+                        <h3 th:text="*{name}">Album Name</h3>
+                        <h4 th:text="*{author.username}">by: Dio</h5>
+                        <h5 th:text="*{date}">22/04/1992</h5>
+                    </div>
+                    <div class="album-card" th:object="${album}" th:each="album : ${userAlbums}">
+                        <div class="thumbnail-container">
+                            <img class="album-thumbnail" th:src="*{thumbnail}" src="img/test-portrait.jpg" />
+                        </div>
+                        <h3 th:text="*{name}">Album Name</h3>
+                        <h4 th:text="*{author.username}">by: Dio</h5>
+                        <h5 th:text="*{date}">22/04/1992</h5>
+                    </div>
+                    <div class="album-card" th:object="${album}" th:each="album : ${userAlbums}">
+                        <div class="thumbnail-container">
+                            <img class="album-thumbnail" th:src="*{thumbnail}" src="img/test-portrait.jpg" />
+                        </div>
+                        <h3 th:text="*{name}">Album Name</h3>
+                        <h4 th:text="*{author.username}">by: Dio</h5>
+                        <h5 th:text="*{date}">22/04/1992</h5>
+                    </div>
+                    <div class="album-card" th:object="${album}" th:each="album : ${userAlbums}">
+                        <div class="thumbnail-container">
+                            <img class="album-thumbnail" th:src="*{thumbnail}" src="img/test-portrait.jpg" />
+                        </div>
+                        <h3 th:text="*{name}">Album Name</h3>
+                        <h4 th:text="*{author.username}">by: Dio</h5>
+                        <h5 th:text="*{date}">22/04/1992</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+
+
+</html>
