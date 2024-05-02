@@ -9,6 +9,11 @@ body {
     color: var(--fg-color);
 }
 
+.no-style {
+    text-decoration: none;
+    color: inherit !important;
+}
+
 .navbar {
     margin: 0;
     padding: 0;

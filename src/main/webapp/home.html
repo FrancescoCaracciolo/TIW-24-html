@@ -23,10 +23,11 @@
                         <h3 th:text="*{name}">Album Name</h3>
                         <h4 th:text="*{author.username}">by: Dio</h5>
                         <h5 th:text="*{date}">22/04/1992</h5>
+                        <a href="/album.html" th:href="@{/album(id=*{id})}">Go to album</a>
                     </div>
                     <div class="album-card" th:object="${album}" th:each="album : ${userAlbums}">
                         <div class="thumbnail-container">
-                            <img class="album-thumbnail" th:src="*{thumbnail}" src="img/test-portrait.jpg" />
+                            <img class="album-thumbnail" th:src="*{thumbnail}" src="img/test.jpg" />
                         </div>
                         <h3 th:text="*{name}">Album Name</h3>
                         <h4 th:text="*{author.username}">by: Dio</h5>
