@@ -23,6 +23,12 @@ public class SigninServlet extends ThymeleafServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// If a session already exists, redirect to homepage
+		if (!request.getSession().isNew()) {
+			response.sendRedirect("home");
+		}
+		
+		// Otherwise, load the signin.html page
 		WebContext ctx = new WebContext(request, response, getServletContext(), response.getLocale());
 		ctx.setVariable("error", false);
 		
@@ -32,10 +38,11 @@ public class SigninServlet extends ThymeleafServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String emailOrUsername = request.getParameter("email-username");
 		String password = request.getParameter("password");
-		HttpSession session = request.getSession();
+		
+		// Create a new session
+		HttpSession session = request.getSession(true);
 		
 		WebContext ctx = new WebContext(request, response, getServletContext(), response.getLocale());
-
 		SignUtility util = new SignUtility(response, templateEngine, ctx, "signin");
 
 		if (SignUtility.isNullOrBlank(emailOrUsername) || SignUtility.isNullOrBlank(password)) {
@@ -44,10 +51,9 @@ public class SigninServlet extends ThymeleafServlet {
 			try {
 				Optional<Person> person = personDAO.getFromEmailOrUsername(emailOrUsername);
 				
+				// If the user exists and the password is right
 				if (person.isPresent() && SignUtility.verifyEqualityToHash(password, person.get().getPasswordHash())) {
-					Person loggedPerson = person.get();
-					session.setAttribute("Id", loggedPerson.getId());
-					
+					session.setAttribute("person", person.get());
 					response.sendRedirect("home");
 				} else {
 					util.invalidFormData("Wrong username/email or password");
