@@ -21,7 +21,7 @@ CREATE TABLE image (
 	id INTEGER NOT NULL,
 	file_path VARCHAR(255) NOT NULL,
 	title VARCHAR(30) NOT NULL,
-    upload_date DATE NOT NULL,
+    upload_date DATE NOT NULL DEFAULT (CURRENT_DATE),
     uploader_id INTEGER NOT NULL,
     
     UNIQUE (file_path),
@@ -34,7 +34,7 @@ CREATE TABLE image (
 CREATE TABLE album (
 	id INTEGER AUTO_INCREMENT NOT NULL,
 	title VARCHAR(30) NOT NULL,
-    creation_date DATE NOT NULL,
+    creation_date DATE NOT NULL DEFAULT (CURRENT_DATE),
     creator_id INTEGER NOT NULL,
     
    	CONSTRAINT album_unique UNIQUE (id, creator_id),
