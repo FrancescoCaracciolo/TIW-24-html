@@ -64,7 +64,7 @@ public class PersonDAO implements DAO<Person, Integer> {
 	}
 
 	@Override
-	public void save(String[] params) throws SQLException {
+	public void save(String... params) throws SQLException {
 		saveStatement.setString(1, params[0]);
 		saveStatement.setString(2, params[1]);
 		saveStatement.setString(3, params[2]);

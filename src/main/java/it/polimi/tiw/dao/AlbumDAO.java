@@ -58,7 +58,7 @@ public class AlbumDAO implements DAO<Album, Integer> {
 	}
 
 	@Override
-	public void save(String[] params) throws SQLException {
+	public void save(String... params) throws SQLException {
 		saveStatement.setString(1, params[0]);
 		saveStatement.setInt(2, Integer.parseInt(params[1]));
 		
