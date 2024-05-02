@@ -15,6 +15,7 @@ public class PersonDAO implements DAO<Person, Integer> {
 	private PreparedStatement getFromIdStatement;
 	private PreparedStatement getFromUsernameStatement;
 	private PreparedStatement getFromEmailStatement;
+	private PreparedStatement getFromEmailOrUsername;
 	
 	public PersonDAO(Connection dbConnection) throws SQLException {
 		this.dbConnection = dbConnection;
@@ -25,8 +26,17 @@ public class PersonDAO implements DAO<Person, Integer> {
 		getFromIdStatement = dbConnection.prepareStatement("SELECT * FROM person WHERE id=?;");
 		getFromUsernameStatement = dbConnection.prepareStatement("SELECT * FROM person WHERE username=?;");
 		getFromEmailStatement = dbConnection.prepareStatement("SELECT * FROM person WHERE email=?;");
+		getFromEmailOrUsername = dbConnection.prepareStatement("SELECT * FROM person WHERE username = ? or email = ?");
 	}
 	
+	public Optional<Person> getFromEmailOrUsername(String emailOrUsername) throws SQLException {
+		getFromEmailOrUsername.setString(1, emailOrUsername);
+		getFromEmailOrUsername.setString(2, emailOrUsername);
+		
+		ResultSet result = getFromEmailOrUsername.executeQuery();
+		
+		return personFromResult(result);
+	}
 	@Override
 	public Optional<Person> get(Integer id) throws SQLException {
 		getFromIdStatement.setInt(1, id);
@@ -91,6 +101,7 @@ public class PersonDAO implements DAO<Person, Integer> {
 		saveStatement.close();
 		updateStatement.close();
 		deleteStatement.close();
+		getFromEmailOrUsername.close();
 	}
 
 	// Utility method
