@@ -15,6 +15,10 @@ public class Album {
 		this.creationDate = creationDate;
 	}
 	
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
 	public int getId() {
 		return id;
 	}

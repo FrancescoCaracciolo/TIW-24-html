@@ -17,6 +17,7 @@ public class AlbumDAO implements DAO<Album, Integer> {
 	private PreparedStatement deleteStatement;
 	private PreparedStatement getStatement;
 	private PreparedStatement getAllStatement;
+	private PreparedStatement getFromCreatorStatement;
 	
 	public AlbumDAO(Connection dbConnection) throws SQLException {
 		this.dbConnection = dbConnection;
@@ -26,6 +27,7 @@ public class AlbumDAO implements DAO<Album, Integer> {
 		deleteStatement = dbConnection.prepareStatement("DELETE FROM album WHERE id=?;");
 		getStatement = dbConnection.prepareStatement("SELECT * FROM album WHERE id=?;");
 		getAllStatement = dbConnection.prepareStatement("SELECT * FROM album;");
+		getFromCreatorStatement = dbConnection.prepareStatement("SELECT * FROM album WHERE creator_id=?;");
 	}
 	
 	@Override
@@ -46,6 +48,14 @@ public class AlbumDAO implements DAO<Album, Integer> {
 		
 		return albumsFromResult(result);
 	}
+	
+	public List<Album> getFromCreator(Person person) throws SQLException {
+		getFromCreatorStatement.setInt(1, person.getId());
+		
+		ResultSet result = getFromCreatorStatement.executeQuery();
+		
+		return albumsFromResult(result);
+	}
 
 	@Override
 	public void save(String[] params) throws SQLException {
@@ -56,9 +66,9 @@ public class AlbumDAO implements DAO<Album, Integer> {
 	}
 
 	@Override
-	public void update(Album album, String[] params) throws SQLException {
+	public void update(Album album) throws SQLException {
 		// Set new fields values
-		updateStatement.setString(1, params[0]);
+		updateStatement.setString(1, album.getTitle());
 		
 		// Set id field value
 		updateStatement.setInt(4, album.getId());
@@ -75,7 +85,7 @@ public class AlbumDAO implements DAO<Album, Integer> {
 		deleteStatement.executeUpdate();
 	}
 
-	@Override
+	@Override 
 	public void close() throws SQLException {
 		getStatement.close();
 		saveStatement.close();
