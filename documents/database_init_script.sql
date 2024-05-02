@@ -9,20 +9,21 @@ DROP TABLE IF EXISTS person;
 
 -- CREATE all TABLEs
 CREATE TABLE person (
-	username VARCHAR(20),
+	id INTEGER AUTO_INCREMENT NOT NULL,
+	username VARCHAR(20) UNIQUE NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(60) NOT NULL,
     
-    PRIMARY KEY (username)
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE image (
-	file_path VARCHAR(255),
+	file_path VARCHAR(255) NOT NULL,
 	title VARCHAR(30) NOT NULL,
-    upload_DATE DATE NOT NULL,
-    uploader_username CHAR(20),
+    upload_date DATE NOT NULL,
+    uploader_id INTEGER NOT NULL,
     
-    foreign KEY (uploader_username) REFERENCES person(username)
+    FOREIGN KEY (uploader_id) REFERENCES person(id)
 		ON UPDATE CASCADE
         ON DELETE CASCADE,
 	PRIMARY KEY (file_path)
@@ -30,40 +31,40 @@ CREATE TABLE image (
 
 CREATE TABLE album (
 	title VARCHAR(30) NOT NULL,
-    creation_DATE DATE NOT NULL,
-    creator_username CHAR(20),
+    creation_date DATE NOT NULL,
+    creator_id INTEGER NOT NULL,
     
-    foreign KEY (creator_username) REFERENCES person(username)
+    foreign KEY (creator_id) REFERENCES person(id)
 		ON UPDATE CASCADE
         ON DELETE CASCADE,
-    PRIMARY KEY (title, creator_username)
+    PRIMARY KEY (title, creator_id)
 );
 
 CREATE TABLE image_album (
 	image_path VARCHAR(255),
     album_title VARCHAR(30),
-    album_creator_username CHAR(30),
-    order_position integer,
+    album_creator_id INTEGER NOT NULL,
+    order_position INTEGER,
     
-    foreign KEY (image_path) REFERENCES image(file_path)
+    FOREIGN KEY (image_path) REFERENCES image(file_path)
 		ON UPDATE CASCADE
 		ON DELETE CASCADE,
-    foreign KEY (album_title, album_creator_username) REFERENCES album(title, creator_username)
+    FOREIGN KEY (album_title, album_creator_id) REFERENCES album(title, creator_id)
 		ON UPDATE CASCADE
 		ON DELETE CASCADE,
-    PRIMARY KEY (image_path, album_title, album_creator_username)
+    PRIMARY KEY (image_path, album_title, album_creator_id)
 );
 
 CREATE TABLE text_comment (
-	id INTEGER AUTO_INCREMENT,
-    content text NOT NULL,
+	id INTEGER AUTO_INCREMENT NOT NULL,
+    content TEXT NOT NULL,
     image_path VARCHAR(255) NOT NULL,
-    author_useraname CHAR(20),
+    author_id INTEGER,
     
-    foreign KEY (image_path) REFERENCES person(username)
+    foreign KEY (image_path) REFERENCES image(file_path)
 		ON UPDATE CASCADE
         ON DELETE CASCADE,
-    foreign KEY (author_useraname) REFERENCES person(username)
+    foreign KEY (author_id) REFERENCES person(id)
 		ON UPDATE CASCADE
         ON DELETE SET NULL,
 	PRIMARY KEY (id)
