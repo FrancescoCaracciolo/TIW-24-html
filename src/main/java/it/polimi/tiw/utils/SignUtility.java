@@ -3,7 +3,6 @@ package it.polimi.tiw.utils;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.thymeleaf.TemplateEngine;
