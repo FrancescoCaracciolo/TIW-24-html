@@ -30,3 +30,24 @@
 .comment-text {
     font-size: 16px;
 }
+
+
+
+
+.table-page {
+    width: 100%;
+}
+table { 
+    table-layout:fixed;
+}
+td { 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    word-wrap: break-word;
+}
+
+.image-album-page {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}

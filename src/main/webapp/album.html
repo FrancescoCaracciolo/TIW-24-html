@@ -1,0 +1,59 @@
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title th:text="${image.title}">Image</title>
+        <link rel="stylesheet" href="css/imagepage.css"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </head>
+    <body>
+        <!-- Navbar -->
+        <div class="navbar">
+            <!-- Section on left - home button, back button button-->
+            <div>
+            <a href="createAlbum.html" th:href="back">
+                <button class="icon-button button">
+                    <img src="icons/back.svg" title="Create album" alt="Album"/>
+                </button>
+            </a>
+            <a href="home.html" th:href="home">
+                <button class="icon-button button">
+                    <img src="icons/home.svg" title="Back to album page" alt="Home"/>
+                </button>
+            </a>
+        </div>
+            <!-- Section on right, username and logout button-->
+            <div style="display: flex;">
+                <h1 th:text="${user.username}">Oingo</h1>
+                <a href="/logout" style="margin-right: 3px; margin-left: 10px;">
+                    <button class="button destructive-button">Log out</button>
+                </a>
+            </div>
+        </div>
+
+        <div class="image-page">
+            <table>
+                <tbody>
+                    <tr class="table-page">
+                        <td>
+                            <img class="image-album-page" src="img/test-portrait.jpg"/>
+                        </td>
+                        <td>
+                            <img class="image-album-page" src="img/test-portrait.jpg"/>
+                        </td>
+                        <td>
+                            <img class="image-album-page" src="img/test-portrait.jpg"/>
+                        </td>
+                        <td>
+                            <img class="image-album-page" src="img/test-portrait.jpg"/>
+                        </td>
+                        <td>
+                            <img class="image-album-page" src="img/test.jpg"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        
+    </body>
+
+</html>
