@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import org.thymeleaf.context.WebContext;
 import it.polimi.tiw.dao.Person;
+import it.polimi.tiw.utils.SessionUtility;
 import it.polimi.tiw.utils.SignUtility;
 
 @WebServlet("/signin")
@@ -24,9 +25,7 @@ public class SigninServlet extends ThymeleafServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// If a session already exists, redirect to homepage
-		if (!request.getSession().isNew()) {
-			response.sendRedirect("home");
-		}
+		SessionUtility.redirectOnValidSession("home", request, response);
 		
 		// Otherwise, load the signin.html page
 		WebContext ctx = new WebContext(request, response, getServletContext(), response.getLocale());
