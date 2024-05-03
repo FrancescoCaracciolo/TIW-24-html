@@ -37,6 +37,10 @@ public class HomeServlet extends ThymeleafServlet {
 			AlbumDAO albumDAO = new AlbumDAO(this.dbConnection);
 			List<Album> albums = albumDAO.getFromCreator(loggedPerson);
 			
+			for (Album album : albums) {
+				
+			}
+			
 			ctx.setVariable("userAlbums", albums);
 		} catch (SQLException e) {
 			e.printStackTrace();
