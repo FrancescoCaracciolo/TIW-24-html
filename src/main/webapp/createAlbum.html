@@ -1,14 +1,18 @@
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
         <title>Create album</title>
-        <link rel="stylesheet" href="css/createalbum.css">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="css/createalbum.css"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </head>
     <body>
         <!-- Navbar -->
         <div class="navbar">
             <!-- Section on left - create album button-->
-            <a href="home.html" th:href="home"><button class="icon-button button"><img src="icons/home.svg" title="Go to home" alt="Home"/></button></a>
+            <a href="home.html" th:href="home">
+                <button class="icon-button button">
+                    <img src="icons/home.svg" title="Go to home" alt="Home"/>
+                </button>
+            </a>
             <!-- Section on right, username and logout button-->
             <div style="display: flex;">
                 <h1 th:text="${user.username}">Oingo</h1>
@@ -28,7 +32,7 @@
                     <label for="image-upload" class="icon-button button">
                             <img src="icons/upload.svg" title="Upload image" alt="Upload"/>
                     </label>
-                    <input type="submit" style="margin-left: 5px" class="button accent-button" value="Upload">
+                    <input type="submit" style="margin-left: 5px" class="button accent-button" value="Upload" />
                 </div>
             </form>
             <!-- Create album form -->
@@ -50,37 +54,8 @@
 
                     <div class="photo-check">
                         <input type="checkbox" name="checkbox" class="checkbox">
-                        <img src="img/test.jpg" class="checkbox-image" />
-                    </div>
-                    <div class="photo-check">
-                        <input type="checkbox" name="checkbox" class="checkbox">
-                        <img src="img/test.jpg" class="checkbox-image" />
-                    </div>
-                    <div class="photo-check">
-                        <input type="checkbox" name="checkbox" class="checkbox">
-                        <img src="img/test.jpg" class="checkbox-image" />
-                    </div>
-                    <div class="photo-check">
-                        <input type="checkbox" name="checkbox" class="checkbox">
-                        <img src="img/test.jpg" class="checkbox-image" />
-                    </div>
-                    <div class="photo-check">
-                        <input type="checkbox" name="checkbox" class="checkbox">
-                        <img src="img/test.jpg" class="checkbox-image" />
-                    </div>
-                    <div class="photo-check">
-                        <input type="checkbox" name="checkbox" class="checkbox">
-                        <img src="img/test.jpg" class="checkbox-image" />
-                    </div>
-                    <div class="photo-check">
-                        <input type="checkbox" name="checkbox" class="checkbox">
                         <img src="img/test-portrait.jpg" class="checkbox-image" />
                     </div>
-                    <div class="photo-check">
-                        <input type="checkbox" name="checkbox" class="checkbox">
-                        <img src="img/test.jpg" class="checkbox-image" />
-                    </div>
-
                 </div>
                 <br />
                 <input type="submit" class="button accent-button" value="Create" />
