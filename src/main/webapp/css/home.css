@@ -1,5 +1,6 @@
 @import url("style.css");
 
+
 .feed {
     width: 100%;
 }
@@ -43,6 +44,26 @@
 
     border-radius: 20px;
 }
+
+.card-title {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-size: 20px;
+    font-family: Roboto;
+    font-weight: bold;
+}
+
+.card-author {
+    margin-top: 0px;
+    font-size: 18;
+    font-family: Roboto;
+}
+
+.card-date {
+    font-size: 16;
+    font-family: Raleway;
+}
+
 
 @media (max-width: 800px) {
     .album-thumbnail {
