@@ -1,4 +1,4 @@
-package it.polimi.tiw.dao;
+package it.polimi.tiw.beans;
 
 public class Person {
 	private int id;

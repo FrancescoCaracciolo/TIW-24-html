@@ -9,6 +9,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import it.polimi.tiw.beans.Album;
+import it.polimi.tiw.beans.Image;
+
 public class ImageDAO implements DAO<Image, Integer> {
 	private Connection dbConnection;
 	

@@ -11,7 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.thymeleaf.context.WebContext;
-import it.polimi.tiw.dao.Person;
+
+import it.polimi.tiw.beans.Person;
 import it.polimi.tiw.utils.SessionUtility;
 import it.polimi.tiw.utils.SignUtility;
 

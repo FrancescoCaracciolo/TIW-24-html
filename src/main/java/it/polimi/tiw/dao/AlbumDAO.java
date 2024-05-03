@@ -9,6 +9,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import it.polimi.tiw.beans.Album;
+import it.polimi.tiw.beans.Person;
+
 public class AlbumDAO implements DAO<Album, Integer> {
 	private Connection dbConnection;
 	

@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
+import it.polimi.tiw.beans.Person;
 import it.polimi.tiw.utils.SignUtility;
 
 public class PersonDAO implements DAO<Person, Integer> {
