@@ -71,7 +71,7 @@ public class AlbumDAO implements DAO<Album, Integer> {
 		updateStatement.setString(1, album.getTitle());
 		
 		// Set id field value
-		updateStatement.setInt(4, album.getId());
+		updateStatement.setInt(2, album.getId());
 		
 		updateStatement.executeUpdate();
 		
