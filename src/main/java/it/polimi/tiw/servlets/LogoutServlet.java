@@ -6,7 +6,6 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 @WebServlet("/logout")
 public class LogoutServlet extends DataServlet {
@@ -17,14 +16,11 @@ public class LogoutServlet extends DataServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
-		session.setAttribute("Id", null);
+		request.getSession().invalidate();
 		response.sendRedirect("signin");
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
-		session.setAttribute("Id", null);
-		response.sendRedirect("signin");
+		doGet(request, response);
 	}
 }
