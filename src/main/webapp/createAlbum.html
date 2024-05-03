@@ -25,8 +25,13 @@
         <div class="create-album-form">
             <h1>Upload a new photo</h1>
             <!-- Uplaod form-->
-            <p>Choose the photo and then click upload</p>
+            <p>Choose the photo adn the title and then click upload</p>
             <form action="uploadImage" method="post" enctype="multipart/form-data">
+                <!-- Image title-->
+                <label class="input-label">Image title</label>
+                <br />
+                <input type="text" class="input" name="title"/>
+                <!-- Image upload -->
                 <div style="display: flex; justify-content: center;">
                     <input type="file" id="image-upload" name="image" accept="image/*" hidden required/>
                     <label for="image-upload" class="icon-button button">
@@ -49,9 +54,11 @@
                     <!-- Photo list -->
                     <div class="photo-check" th:object="${photo}" th:each="photo : ${userPhotos}">
                         <input th:id="*{id}" type="checkbox" name="checkbox" class="checkbox">
-                        <img th:src="*{path}" src="img/test.jpg" class="checkbox-image" />
+                        <a th:href="@{/image(id=*{id})}" href="imagePage.html">
+                            <img th:src="*{path}" src="img/test.jpg" class="checkbox-image" />
+                        </a>
                     </div>
-
+                    <!-- Demo image -->
                     <div class="photo-check">
                         <input type="checkbox" name="checkbox" class="checkbox">
                         <img src="img/test-portrait.jpg" class="checkbox-image" />

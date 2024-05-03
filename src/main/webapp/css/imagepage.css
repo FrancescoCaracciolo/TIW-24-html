@@ -1,0 +1,32 @@
+@import url("style.css");
+
+.image-page {
+    justify-content: center;
+    text-align: center;
+}
+.comments {
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 12px;
+    background-color: var(--primary-container);
+    padding: 10px;
+    width: 100%;
+    border-radius: 24px;
+}
+.comment {
+    display: block;
+    background-color: var(--secondary-container);
+    text-align: left;
+    padding: 10px;
+    border-radius: 20px;
+    margin-top: 3px;
+}
+
+.comment-author {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.comment-text {
+    font-size: 16px;
+}
