@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
+import it.polimi.tiw.utils.SignUtility;
+
 public class PersonDAO implements DAO<Person, Integer> {
 	private Connection dbConnection;
 	
@@ -65,9 +67,11 @@ public class PersonDAO implements DAO<Person, Integer> {
 
 	@Override
 	public void save(String... params) throws SQLException {
+		String hashedSaltedPassword = SignUtility.hashAndSalt(params[2]);
+		
 		saveStatement.setString(1, params[0]);
 		saveStatement.setString(2, params[1]);
-		saveStatement.setString(3, params[2]);
+		saveStatement.setString(3, hashedSaltedPassword);
 		
 		saveStatement.executeUpdate();
 	}
@@ -77,7 +81,6 @@ public class PersonDAO implements DAO<Person, Integer> {
 		// Set new fields values
 		updateStatement.setString(1, person.getUsername());
 		updateStatement.setString(2, person.getEmail());
-		updateStatement.setString(3, person.getPasswordHash());
 		
 		// Set id field value
 		updateStatement.setInt(4, person.getId());

@@ -1,18 +1,16 @@
 package it.polimi.tiw.dao;
 
-import it.polimi.tiw.utils.SignUtility;
-
 public class Person {
 	private int id;
 	private String username;
 	private String email;
 	private String passwordHash;
 	
-	public Person(int id, String username, String email, String password) {
+	public Person(int id, String username, String email, String passwordHash) {
 		this.id = id;
 		this.username = username;
 		this.email = email;
-		this.passwordHash = SignUtility.hashAndSalt(password);
+		this.passwordHash = passwordHash;
 	}
 	
 	public void setUsername(String username) {
@@ -21,10 +19,6 @@ public class Person {
 	
 	public void setEmail(String email) {
 		this.email = email;
-	}
-	
-	public void setPassword(String password) {
-		this.passwordHash = SignUtility.hashAndSalt(password);
 	}
 	
 	public int getId() {
