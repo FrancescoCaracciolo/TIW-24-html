@@ -9,7 +9,7 @@
         <!-- Navbar -->
         <div class="navbar">
             <!-- Section on left - create album button-->
-            <a href="createAlbum.html" th:href="createAlbum">
+            <a href="create_album.html" th:href="createAlbum">
                 <button class="icon-button button">
                     <img src="icons/add.svg" title="Create album" alt="Create" />
                 </button>
@@ -17,7 +17,7 @@
             <!-- Section on right, username and logout button-->
             <div style="display: flex;">
                 <h1 th:text="${user.username}">Oingo</h1>
-                <a href="/logout" style="margin-right: 3px; margin-left: 10px;">
+                <a href="logout" style="margin-right: 3px; margin-left: 10px;">
                     <button class="button destructive-button">Log out</button>
                 </a>
             </div>
@@ -32,12 +32,12 @@
                     <!-- Single album card-->
                     <div class="album-card" th:object="${album}" th:each="album : ${userAlbums}">
                         <div class="thumbnail-container">
-                            <img class="album-thumbnail" th:src="*{thumbnail}" src="img/test.jpg" />
+                            <img class="album-thumbnail" th:src="${albumThumbnail[__*{id}__].filePath}" src="img/test.jpg" />
                         </div>
                         <div class="card-information">
-                            <p class="card-title" th:text="*{name}">Album Name</p>
-                            <p class="card-author" th:text="*{author.username}">by: Dio</p>
-                            <p class="card-date" th:text="*{date}">22/04/1992</p>
+                            <p class="card-title" th:text="*{title}">Album Name</p>
+                            <p class="card-author" th:text="${albumAuthor[__*{id}__].username}">by: Dio</p>
+                            <p class="card-date" th:text="*{creationDate}">22/04/1992</p>
                             <a href="/album.html" th:href="@{/album(id=*{id})}"><button class="button accent-button">Go to album</button></a>
                         </div>
                     </div>
@@ -49,14 +49,14 @@
                 <!-- Grid of albums-->
                 <div class="album-grid" th:remove="all-but-first">
                     <!-- Single album card-->
-                    <div class="album-card" th:object="${album}" th:each="album : ${userAlbums}">
+                    <div class="album-card" th:object="${album}" th:each="album : ${allAlbums}" th:if="${album.creatorId} != ${user.id}">
                         <div class="thumbnail-container">
-                            <img class="album-thumbnail" th:src="*{thumbnail}" src="img/test.jpg" />
+                            <img class="album-thumbnail" th:src="${albumThumbnail[__*{id}__].filePath}" src="img/test.jpg" />
                         </div>
                         <div class="card-information">
-                            <p class="card-title" th:text="*{name}">Album Name</p>
-                            <p class="card-author" th:text="*{author.username}">by: Dio</p>
-                            <p class="card-date" th:text="*{date}">22/04/1992</p>
+                            <p class="card-title" th:text="*{title}">Album Name</p>
+                            <p class="card-author" th:text="${albumAuthor[__*{id}__].username}">by: Dio</p>
+                            <p class="card-date" th:text="*{creationDate}">22/04/1992</p>
                             <a href="/album.html" th:href="@{/album(id=*{id})}"><button class="button accent-button">Go to album</button></a>
                         </div>
                     </div>
