@@ -8,12 +8,28 @@ import javax.servlet.http.HttpSession;
 
 public class SessionUtility {
 	
-	public static void redirectOnValidSession(String redirectPath, HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public static boolean redirectOnValidSession(String redirectPath, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		HttpSession session = request.getSession(false);
 		
-		if (session != null && request.isRequestedSessionIdValid()) {
-			response.sendRedirect(redirectPath);        
+		boolean sessionValid = session != null && request.isRequestedSessionIdValid() && session.getAttribute("user") != null;
+		
+		if (sessionValid) {
+			response.sendRedirect(redirectPath);
 		}
+		
+		return sessionValid;
+	}
+	
+	public static boolean redirectOnInvalidSession(String redirectPath, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession(false);
+		
+		boolean sessionValid = session != null && request.isRequestedSessionIdValid() && session.getAttribute("user") != null;
+		
+		if (!sessionValid) {
+			response.sendRedirect(redirectPath);
+		}
+		
+		return !sessionValid;
 	}
 	
 }

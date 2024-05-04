@@ -25,7 +25,8 @@ public class SignupServlet extends ThymeleafServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// If a session already exists, redirect to homepage
-		SessionUtility.redirectOnValidSession("home", request, response);
+		boolean isSessionValid = SessionUtility.redirectOnValidSession("home", request, response);
+		if (isSessionValid) return;
 		
 		// Otherwise, load the signup.html page
 		WebContext ctx = new WebContext(request, response, getServletContext(), response.getLocale());
@@ -78,7 +79,7 @@ public class SignupServlet extends ThymeleafServlet {
 					
 					// If the user has actually been added to the db
 					if(createdPerson.isPresent()) {
-						session.setAttribute("person", createdPerson.get());
+						session.setAttribute("user", createdPerson.get());
 						response.sendRedirect("home");
 					} else {
 						util.invalidFormData("The account cannot be created, try later");

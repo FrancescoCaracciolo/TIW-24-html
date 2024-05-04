@@ -26,7 +26,8 @@ public class SigninServlet extends ThymeleafServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// If a session already exists, redirect to homepage
-		SessionUtility.redirectOnValidSession("home", request, response);
+		boolean isSessionValid = SessionUtility.redirectOnValidSession("home", request, response);
+		if (isSessionValid) return;
 		
 		// Otherwise, load the signin.html page
 		WebContext ctx = new WebContext(request, response, getServletContext(), response.getLocale());
@@ -53,7 +54,7 @@ public class SigninServlet extends ThymeleafServlet {
 				
 				// If the user exists and the password is right
 				if (person.isPresent() && SignUtility.verifyEqualityToHash(password, person.get().getPasswordHash())) {
-					session.setAttribute("person", person.get());
+					session.setAttribute("user", person.get());
 					response.sendRedirect("home");
 				} else {
 					util.invalidFormData("Wrong username/email or password");
