@@ -19,7 +19,7 @@ public class ImageDAO implements DAO<Image, Integer> {
 	private PreparedStatement updateStatement;
 	private PreparedStatement deleteStatement;
 	private PreparedStatement getStatement;
-	private PreparedStatement getAlbumThumbnail;
+	private PreparedStatement getAlbumThumbnailStatement;
 	
 	public ImageDAO(Connection dbConnection) throws SQLException {
 		this.dbConnection = dbConnection;
@@ -28,7 +28,7 @@ public class ImageDAO implements DAO<Image, Integer> {
 		updateStatement = dbConnection.prepareStatement("UPDATE image SET title=? WHERE id=?;");
 		deleteStatement = dbConnection.prepareStatement("DELETE FROM image WHERE id=?;");
 		getStatement = dbConnection.prepareStatement("SELECT * FROM image WHERE id=?;");
-		getAlbumThumbnail = dbConnection.prepareStatement("SELECT i.* FROM image i JOIN image_album ia ON i.id=ia.image_id AND ia.album_id=? ORDER BY upload_date;");
+		getAlbumThumbnailStatement = dbConnection.prepareStatement("SELECT i.* FROM image i JOIN image_album ia ON i.id=ia.image_id WHERE ia.album_id=? ORDER BY upload_date;");
 	}
 
 	@Override
@@ -45,9 +45,9 @@ public class ImageDAO implements DAO<Image, Integer> {
 	}
 	
 	public Optional<Image> getAlbumThumbnail(Album album) throws SQLException {
-		getAlbumThumbnail.setInt(1, album.getId());
+		getAlbumThumbnailStatement.setInt(1, album.getId());
 		
-		ResultSet result = getAlbumThumbnail.executeQuery();
+		ResultSet result = getAlbumThumbnailStatement.executeQuery();
 		
 		List<Image> images = imagesFromResult(result);
 		
@@ -90,6 +90,7 @@ public class ImageDAO implements DAO<Image, Integer> {
 		saveStatement.close();
 		updateStatement.close();
 		deleteStatement.close();
+		getAlbumThumbnailStatement.close();
 	}
 	
 	// Utility method

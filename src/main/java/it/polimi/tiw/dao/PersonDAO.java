@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
+import it.polimi.tiw.beans.Album;
 import it.polimi.tiw.beans.Person;
 import it.polimi.tiw.utils.SignUtility;
 
@@ -18,7 +19,8 @@ public class PersonDAO implements DAO<Person, Integer> {
 	private PreparedStatement getFromIdStatement;
 	private PreparedStatement getFromUsernameStatement;
 	private PreparedStatement getFromEmailStatement;
-	private PreparedStatement getFromEmailOrUsername;
+	private PreparedStatement getFromEmailOrUsernameStatement;
+	private PreparedStatement getAlbumAuthorStatement;
 	
 	public PersonDAO(Connection dbConnection) throws SQLException {
 		this.dbConnection = dbConnection;
@@ -29,7 +31,8 @@ public class PersonDAO implements DAO<Person, Integer> {
 		getFromIdStatement = dbConnection.prepareStatement("SELECT * FROM person WHERE id=?;");
 		getFromUsernameStatement = dbConnection.prepareStatement("SELECT * FROM person WHERE username=?;");
 		getFromEmailStatement = dbConnection.prepareStatement("SELECT * FROM person WHERE email=?;");
-		getFromEmailOrUsername = dbConnection.prepareStatement("SELECT * FROM person WHERE username = ? or email = ?");
+		getFromEmailOrUsernameStatement = dbConnection.prepareStatement("SELECT * FROM person WHERE username = ? or email = ?");
+		getAlbumAuthorStatement = dbConnection.prepareStatement("SELECT p.* FROM album a JOIN person p ON a.creator_id=p.id WHERE a.id=?;");
 	}
 	
 	@Override
@@ -41,11 +44,19 @@ public class PersonDAO implements DAO<Person, Integer> {
 		return personFromResult(result);
 	}
 	
-	public Optional<Person> getFromEmailOrUsername(String emailOrUsername) throws SQLException {
-		getFromEmailOrUsername.setString(1, emailOrUsername);
-		getFromEmailOrUsername.setString(2, emailOrUsername);
+	public Optional<Person> getAlbumAuthor(Album album) throws SQLException {
+		getAlbumAuthorStatement.setInt(1, album.getId());
 		
-		ResultSet result = getFromEmailOrUsername.executeQuery();
+		ResultSet result = getAlbumAuthorStatement.executeQuery();
+		
+		return personFromResult(result);
+	}
+	
+	public Optional<Person> getFromEmailOrUsername(String emailOrUsername) throws SQLException {
+		getFromEmailOrUsernameStatement.setString(1, emailOrUsername);
+		getFromEmailOrUsernameStatement.setString(2, emailOrUsername);
+		
+		ResultSet result = getFromEmailOrUsernameStatement.executeQuery();
 		
 		return personFromResult(result);
 	}
@@ -105,7 +116,8 @@ public class PersonDAO implements DAO<Person, Integer> {
 		saveStatement.close();
 		updateStatement.close();
 		deleteStatement.close();
-		getFromEmailOrUsername.close();
+		getFromEmailOrUsernameStatement.close();
+		getAlbumAuthorStatement.close();
 	}
 
 	// Utility method
