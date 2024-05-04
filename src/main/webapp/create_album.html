@@ -54,7 +54,7 @@
                     <!-- Photo list -->
                     <div class="photo-check" th:object="${photo}" th:each="photo : ${userPhotos}">
                         <input th:id="*{id}" type="checkbox" name="checkbox" class="checkbox">
-                        <a th:href="@{/image(id=*{id})}" href="imagePage.html">
+                        <a th:href="@{/image(id=*{id})}" href="image.html">
                             <img th:src="*{path}" src="img/test.jpg" class="checkbox-image" />
                         </a>
                     </div>

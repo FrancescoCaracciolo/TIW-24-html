@@ -1,0 +1,92 @@
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title th:text="${album.title}">Album</title>
+        <link rel="stylesheet" href="css/albumpage.css"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </head>
+    <body>
+        <!-- Navbar -->
+        <div class="navbar">
+            <!-- Section on left - home button, back button button-->
+            <div>
+            <a href="home.html" th:href="home">
+                <button class="icon-button button">
+                    <img src="icons/home.svg" title="Back to album page" alt="Home"/>
+                </button>
+            </a>
+            <a href="createAlbum">
+                <button class="icon-button button">
+                    <img src="icons/add.svg" title="Create album" alt="Album"/>
+                </button>
+            </a>
+        </div>
+            <!-- Section on right, username and logout button-->
+            <div style="display: flex;">
+                <h1 th:text="${user.username}">Oingo</h1>
+                <a href="/logout" style="margin-right: 3px; margin-left: 10px;">
+                    <button class="button destructive-button">Log out</button>
+                </a>
+            </div>
+        </div>
+
+        <div class="album-page">
+            <!-- Album Information -->
+            <h1 th:text="${album.title}">Album name</h1>
+            <p class="author" th:text="${album.author} - ${alubm.creationDate}">By Boingo - 19/02/1991</p>
+            <!-- Table -->
+            <div class="table-container">
+                <!-- Back button -->
+                <a th:href="@{album(id=${album.id}, page=${page - 1})}" href="album.html" class="navigation-button" th:if="${pageNumber != 0}">
+                    <img src="icons/back.svg" />
+                </a>
+                <table class="album-table">
+                    <tr th:remove="all-but-first">
+                    <td th:each="image : ${images}" th:object="${image}">
+                        <div th:if="${image == null}">
+                            <p th:text="*{title}" class="image-title">Image titledddddddddddddddddddddd</p>
+                            <a th:href="@{/imagePage(id=${image.id}, album=${album.id})}">
+                                <img th:src="*{filePath}" class="image-thumbnail" src="img/test.jpg">
+                            </a>
+                        </div>
+                    </td>
+
+                    <!-- Demo images for template-->
+                    <td>
+                        <p class="image-title">Image title </p>
+                        <a href="image.html">
+                            <img class="image-thumbnail" src="img/test.jpg">
+                        </a>
+                    </td>
+                    <td>
+                        <p class="image-title">Image title </p>
+                        <a href="image.html">
+                            <img class="image-thumbnail" src="img/test.jpg">
+                        </a>
+                    </td>
+                    <td>
+                        <p class="image-title">Image title </p>
+                        <a href="image.html">
+                            <img class="image-thumbnail" src="img/test-portrait.jpg">
+                        </a>
+                    </td>
+                    <td>
+                        <p class="image-title">Image title </p>
+                        <a href="image.html">
+                            <img class="image-thumbnail" src="img/test.jpg">
+                        </a>
+                    </td>
+                    <!-- End demo images-->
+
+                    </tr>
+                </table>
+            <!-- Next button -->
+            <a th:href="@{album(id=${album.id}, page=${page + 1})}" href="album.html" class="navigation-button">
+                <img src="icons/next.svg" />
+            </a>
+            </div>
+        </div>
+
+        
+    </body>
+
+</html>

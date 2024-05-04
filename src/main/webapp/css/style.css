@@ -31,6 +31,16 @@ body {
     color: inherit !important;
 }
 
+.navigation-button {
+    background-color: var(--secondary-container);
+    height: auto;
+    min-width: 20px;
+    border-radius: 50%;
+    margin: 4px;
+    text-align: center;
+    vertical-align: center;
+    padding: 5px;
+}
 
 .button {
     /* colors and style */

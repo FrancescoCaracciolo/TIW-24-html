@@ -1,0 +1,47 @@
+@import url(style.css);
+
+.album-page {
+    justify-content: center;
+    text-align: center;
+}
+.table-container {
+    background-color: var(--primary-container);
+    display: flex;
+    padding: 10px;
+    border-radius: 20px;
+    margin-left: 5px;
+    margin-right: 5px;
+    align-items: center;
+}
+.album-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border-spacing: 0px;
+}
+
+td {
+    width: 20%;
+    padding: 0;
+    text-align: center;
+    text-overflow: hidden;
+
+}
+
+.image-thumbnail {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+}
+
+
+
+.image-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
