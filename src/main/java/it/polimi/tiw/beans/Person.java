@@ -1,5 +1,7 @@
 package it.polimi.tiw.beans;
 
+import java.util.Objects;
+
 public class Person {
 	private int id;
 	private String username;
@@ -37,4 +39,25 @@ public class Person {
 		return passwordHash;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+        if(!(obj instanceof Image)) {
+        	return false;
+        }
+        
+        Person other = (Person) obj;
+        
+        return other.getId() == id && 
+        	   other.getEmail().equals(email) &&
+        	   other.getUsername().equals(username) &&
+        	   other.getPasswordHash().equals(passwordHash);
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, username, email, passwordHash);
+	}
 }

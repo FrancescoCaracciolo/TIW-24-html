@@ -1,6 +1,7 @@
 package it.polimi.tiw.beans;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class Image {
 	private int id;
@@ -11,6 +12,7 @@ public class Image {
 
 	public Image(int id, String filePath, String title, int uploaderId, Date uploadDate) {
 		this.id = id;
+		this.title = title;
 		this.filePath = filePath;
 		this.uploaderId = uploaderId;
 		this.uploadDate = uploadDate;
@@ -38,5 +40,28 @@ public class Image {
 	
 	public Date getUploadDate() {
 		return uploadDate;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+        if(!(obj instanceof Image)) {
+        	return false;
+        }
+        
+        Image other = (Image) obj;
+        
+        return other.getId() == id && 
+        	   other.getTitle().equals(title) &&
+        	   other.getFilePath().equals(filePath) &&
+        	   other.getUploadDate().equals(uploadDate) &&
+        	   other.getUploaderId() == uploaderId;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, title, filePath, uploadDate, uploaderId);
 	}
 }
