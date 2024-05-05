@@ -21,6 +21,8 @@ public class AlbumDAO implements DAO<Album, Integer> {
 	private PreparedStatement getStatement;
 	private PreparedStatement getAllStatement;
 	private PreparedStatement getFromCreatorStatement;
+	private PreparedStatement addImageStatement;
+	private PreparedStatement getFromCreatorAndName;
 	
 	public AlbumDAO(Connection dbConnection) throws SQLException {
 		this.dbConnection = dbConnection;
@@ -31,6 +33,8 @@ public class AlbumDAO implements DAO<Album, Integer> {
 		getStatement = dbConnection.prepareStatement("SELECT * FROM album WHERE id=?;");
 		getAllStatement = dbConnection.prepareStatement("SELECT * FROM album;");
 		getFromCreatorStatement = dbConnection.prepareStatement("SELECT * FROM album WHERE creator_id=?;");
+		addImageStatement = dbConnection.prepareStatement("INSERT INTO image_album (image_id, album_id, order_position) VALUES (?, ?, ?)");
+		getFromCreatorAndName = dbConnection.prepareStatement("SELECT * FROM album WHERE creator_id = ? AND title = ?");
 	}
 	
 	@Override
@@ -58,6 +62,19 @@ public class AlbumDAO implements DAO<Album, Integer> {
 		ResultSet result = getFromCreatorStatement.executeQuery();
 		
 		return albumsFromResult(result);
+	}
+	
+	public Optional<Album> getFromCreatorAndName(Person person, String name) throws SQLException {
+		getFromCreatorAndName.setInt(1, person.getId());
+		getFromCreatorAndName.setString(2, name);
+		
+		ResultSet result = getFromCreatorAndName.executeQuery();
+		
+		List<Album> albums = albumsFromResult(result);
+		
+		return albums.isEmpty()
+				? Optional.empty()
+				: Optional.of(albums.get(0));
 	}
 
 	@Override
@@ -96,6 +113,12 @@ public class AlbumDAO implements DAO<Album, Integer> {
 		deleteStatement.close();
 	}
 	
+	public void addImage(int albumId, int imageId) throws SQLException {
+		addImageStatement.setInt(1, imageId);
+		addImageStatement.setInt(2, albumId);
+		addImageStatement.setInt(3, 0);
+		addImageStatement.executeUpdate();
+	}
 	// Utility method
 	private List<Album> albumsFromResult(ResultSet result) throws SQLException {
 		List<Album> albums = new ArrayList<>();

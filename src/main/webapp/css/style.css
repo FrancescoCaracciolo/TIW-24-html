@@ -132,3 +132,13 @@ p {
     border:1px solid var(--accent-bg-color);
     box-shadow: 0 0 2px var(--accent-bg-color);
 }
+
+.error-container {
+    border: 2px solid var(--error-outline);
+    background-color: var(--error-backgorund);
+    color: var(--error-fg-color);
+    text-align: center;
+    padding: 2px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}

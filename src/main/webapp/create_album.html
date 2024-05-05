@@ -23,14 +23,17 @@
         </div>
 
         <div class="create-album-form">
+            <div class="error-container" th:if="${error}">
+                <p th:text="${errorMessage}">The passwords are not equal</p>
+            </div>
             <h1>Upload a new photo</h1>
-            <!-- Uplaod form-->
-            <p>Choose the photo adn the title and then click upload</p>
-            <form action="uploadImage" method="post" enctype="multipart/form-data">
+            <!-- Upload form-->
+            <p>Choose the photo and the title and then click upload</p>
+            <form action="createAlbum" method="post" enctype="multipart/form-data">
                 <!-- Image title-->
                 <label class="input-label">Image title</label>
                 <br />
-                <input type="text" class="input" name="title"/>
+                <input type="text" class="input" name="image-title"/>
                 <!-- Image upload -->
                 <div style="display: flex; justify-content: center;">
                     <input type="file" id="image-upload" name="image" accept="image/*" hidden required/>
@@ -42,20 +45,20 @@
             </form>
             <!-- Create album form -->
             <h1>Create a new album</h1>
-            <form method="get" action="createAlbum">
+            <form method="post" action="createAlbum">
                 <!-- Album title input -->
                 <label class="input-label">Album title</label>
                 <br />
-                <input class="input" type="text" name="email-username" required/>
+                <input class="input" type="text" name="album-title" required/>
                 <br />
                 
                 <h2>Album photos</h2>
                 <div class="photos-list" th:remove="all-but-first">
                     <!-- Photo list -->
                     <div class="photo-check" th:object="${photo}" th:each="photo : ${userPhotos}">
-                        <input th:id="*{id}" type="checkbox" name="checkbox" class="checkbox">
-                        <a th:href="@{/image(id=*{id})}" href="image.html">
-                            <img th:src="*{path}" src="img/test.jpg" class="checkbox-image" />
+                        <input th:id="*{id}" th:name="*{id}" type="checkbox" name="checkbox" class="checkbox">
+                        <a th:href="@{/image(id=${photo.id})}" href="image.html">
+                            <img th:src="'images/' + ${photo.filePath}" src="img/test.jpg" class="checkbox-image" />
                         </a>
                     </div>
                     <!-- Demo image -->

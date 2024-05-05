@@ -11,16 +11,6 @@
     margin: auto;
 }
 
-.error-container {
-    border: 2px solid var(--error-outline);
-    background-color: var(--error-backgorund);
-    color: var(--error-fg-color);
-    text-align: center;
-    padding: 2px;
-    border-radius: 10px;
-    margin-bottom: 10px;
-}
-
 .sign-form {
     /* colors and style */
     background-color: var(--primary-container);

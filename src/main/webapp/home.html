@@ -32,7 +32,7 @@
                     <!-- Single album card-->
                     <div class="album-card" th:object="${album}" th:each="album : ${userAlbums}">
                         <div class="thumbnail-container">
-                            <img class="album-thumbnail" th:src="${albumThumbnail[__*{id}__].filePath}" src="img/test.jpg" />
+                            <img class="album-thumbnail" th:src="'images/' + ${albumThumbnail[__*{id}__].filePath}" src="img/test.jpg" />
                         </div>
                         <div class="card-information">
                             <p class="card-title" th:text="*{title}">Album Name</p>

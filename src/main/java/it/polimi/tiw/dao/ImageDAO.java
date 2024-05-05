@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import it.polimi.tiw.beans.Album;
 import it.polimi.tiw.beans.Image;
+import it.polimi.tiw.beans.Person;
 
 public class ImageDAO implements DAO<Image, Integer> {
 	private Connection dbConnection;
@@ -20,6 +21,8 @@ public class ImageDAO implements DAO<Image, Integer> {
 	private PreparedStatement deleteStatement;
 	private PreparedStatement getStatement;
 	private PreparedStatement getAlbumThumbnailStatement;
+	private PreparedStatement getPersonImagesStatement;
+	private PreparedStatement getImageFromPathStatement;
 	
 	public ImageDAO(Connection dbConnection) throws SQLException {
 		this.dbConnection = dbConnection;
@@ -28,6 +31,8 @@ public class ImageDAO implements DAO<Image, Integer> {
 		updateStatement = dbConnection.prepareStatement("UPDATE image SET title=? WHERE id=?;");
 		deleteStatement = dbConnection.prepareStatement("DELETE FROM image WHERE id=?;");
 		getStatement = dbConnection.prepareStatement("SELECT * FROM image WHERE id=?;");
+		getImageFromPathStatement = dbConnection.prepareStatement("SELECT * FROM image WHERE path = ?");
+		getPersonImagesStatement = dbConnection.prepareStatement("SELECT * FROM image WHERE uploader_id = ?");
 		getAlbumThumbnailStatement = dbConnection.prepareStatement("SELECT i.* FROM image i JOIN image_album ia ON i.id=ia.image_id WHERE ia.album_id=? ORDER BY upload_date;");
 	}
 
@@ -83,6 +88,17 @@ public class ImageDAO implements DAO<Image, Integer> {
 		
 		deleteStatement.executeUpdate();
 	}
+	
+	public Optional<Image> getFromPath(String path) throws SQLException {
+		getImageFromPathStatement.setString(1, path);
+		ResultSet result = getImageFromPathStatement.executeQuery();
+		
+		List<Image> images = imagesFromResult(result);
+		
+		return images.isEmpty()
+				? Optional.empty()
+				: Optional.of(images.get(0));
+	}
 
 	@Override
 	public void close() throws SQLException {
@@ -91,6 +107,12 @@ public class ImageDAO implements DAO<Image, Integer> {
 		updateStatement.close();
 		deleteStatement.close();
 		getAlbumThumbnailStatement.close();
+	}
+	
+	public List<Image> getPersonImages(Person person) throws SQLException {
+		getPersonImagesStatement.setInt(1, person.getId());
+		ResultSet result = getPersonImagesStatement.executeQuery();
+		return this.imagesFromResult(result);
 	}
 	
 	// Utility method
