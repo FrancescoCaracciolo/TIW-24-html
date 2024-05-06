@@ -18,7 +18,6 @@ import it.polimi.tiw.beans.Image;
 import it.polimi.tiw.beans.Person;
 import it.polimi.tiw.dao.AlbumDAO;
 import it.polimi.tiw.dao.ImageDAO;
-import it.polimi.tiw.utils.AlbumUtility;
 import it.polimi.tiw.utils.SessionUtility;
 
 @WebServlet("/home")
