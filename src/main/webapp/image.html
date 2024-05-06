@@ -44,7 +44,7 @@
                 <h2>Comments</h2>
                 <div th:remove="all-but-first">
                 <div class="comment" th:each="comment : ${comments}" th:object="${comment}">
-                    <p class="comment-author" th:text="*{authorId}">Oingo</p>
+                    <p class="comment-author" th:text="${commentAuthor[__*{id}__].username}">Oingo</p>
                     <p class="comment-text" th:text="*{content}">Fichissimo sto signore!</p>
                 </div>
 

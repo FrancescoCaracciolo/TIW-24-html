@@ -3,6 +3,7 @@ package it.polimi.tiw.servlets;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.ServletException;
@@ -17,6 +18,7 @@ import it.polimi.tiw.beans.Comment;
 import it.polimi.tiw.beans.Image;
 import it.polimi.tiw.dao.CommentDAO;
 import it.polimi.tiw.dao.ImageDAO;
+import it.polimi.tiw.utils.CommentUtility;
 import it.polimi.tiw.utils.GeneralUtility;
 import it.polimi.tiw.utils.SessionUtility;
 
@@ -54,6 +56,7 @@ public class ImageServlet extends ThymeleafServlet {
 		ctx.setVariable("user", user);
 		
 		int imageId = Integer.parseInt(request.getParameter("imgId"));
+		
 		Optional<Image> image;
 		Optional<Person> author;
 		
@@ -63,6 +66,7 @@ public class ImageServlet extends ThymeleafServlet {
 			GeneralUtility.setCtxVariableIfPresent(ctx, response, "image", image);
 			
 			int uploderid = image.get().getUploaderId();
+
 			author = this.personDAO.get(uploderid);
 			
 			GeneralUtility.setCtxVariableIfPresent(ctx, response, "author", author);
@@ -71,6 +75,9 @@ public class ImageServlet extends ThymeleafServlet {
 			
 			ctx.setVariable("comments", comments);
 			
+			Map<Integer, Person> commentAuthor = CommentUtility.getCommentAuthorMap(comments, personDAO);
+			
+			ctx.setVariable("commentAuthor", commentAuthor);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
