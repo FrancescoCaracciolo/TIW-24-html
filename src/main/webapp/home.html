@@ -26,7 +26,9 @@
         <div class="feed">
             <!-- User albums -->
             <div class="album-container">
-                <h2>Your albums</h2>
+                <div class="centerdiv">
+                    <h2>Your albums</h2>
+                </div>
                 <!-- Album "grid" achieved with a flexbox-->
                 <div class="album-grid" th:remove="all-but-first">
                     <!-- Single album card-->
@@ -45,7 +47,9 @@
             </div>
             <!-- Other users albums -->
             <div class="album-container">
-                <h2>Other users' albums</h2>
+                <div class="centerdiv">
+                    <h2>Other users' albums</h2>
+                </div>
                 <!-- Grid of albums-->
                 <div class="album-grid" th:remove="all-but-first">
                     <!-- Single album card-->
