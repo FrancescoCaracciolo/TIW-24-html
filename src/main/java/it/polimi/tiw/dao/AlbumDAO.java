@@ -121,8 +121,10 @@ public class AlbumDAO implements DAO<Album, Integer> {
 		addImageStatement.setInt(1, imageId);
 		addImageStatement.setInt(2, albumId);
 		addImageStatement.setInt(3, 0);
+		
 		addImageStatement.executeUpdate();
 	}
+	
 	// Utility method
 	private List<Album> albumsFromResult(ResultSet result) throws SQLException {
 		List<Album> albums = new ArrayList<>();
