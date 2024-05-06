@@ -4,7 +4,7 @@
 	version="4.0">
 	<context-param>
 		<param-name>uploadDir</param-name>
-		<param-value>TIW-24/src/main/webapp/img/uploads/</param-value>
+		<param-value>TIW-Images/</param-value>
 	</context-param>
 	<context-param>
 		<param-name>dbUrl</param-name>
