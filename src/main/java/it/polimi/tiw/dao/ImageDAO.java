@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.Optional;
 import it.polimi.tiw.beans.Album;
 import it.polimi.tiw.beans.Image;
 import it.polimi.tiw.beans.Person;
+import it.polimi.tiw.utils.DAOUtility;
 
 public class ImageDAO implements DAO<Image, Integer> {
 	private Connection dbConnection;
@@ -27,7 +29,7 @@ public class ImageDAO implements DAO<Image, Integer> {
 	public ImageDAO(Connection dbConnection) throws SQLException {
 		this.dbConnection = dbConnection;
 		
-		saveStatement = dbConnection.prepareStatement("INSERT INTO image (file_path, title, uploader_id) VALUES (?, ?, ?);");
+		saveStatement = dbConnection.prepareStatement("INSERT INTO image (file_path, title, uploader_id) VALUES (?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
 		updateStatement = dbConnection.prepareStatement("UPDATE image SET title=? WHERE id=?;");
 		deleteStatement = dbConnection.prepareStatement("DELETE FROM image WHERE id=?;");
 		getStatement = dbConnection.prepareStatement("SELECT * FROM image WHERE id=?;");
@@ -62,12 +64,14 @@ public class ImageDAO implements DAO<Image, Integer> {
 	}
 
 	@Override
-	public void save(String... params) throws SQLException {
+	public Optional<Image> save(String... params) throws SQLException {
 		saveStatement.setString(1, params[0]);
 		saveStatement.setString(2, params[1]);
 		saveStatement.setInt(3, Integer.parseInt(params[2]));
 		
-		saveStatement.executeUpdate();
+		Optional<Image> newImage = DAOUtility.tryToSave(this, saveStatement);
+		
+		return newImage;
 	}
 
 	@Override

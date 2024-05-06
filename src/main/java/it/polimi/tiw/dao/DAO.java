@@ -6,7 +6,7 @@ import java.util.Optional;
 public interface DAO<T, ID> {
 	Optional<T> get(ID id) throws SQLException;
 	
-	void save(String... params) throws SQLException;
+	Optional<T> save(String... params) throws SQLException;
 
 	void update(T t) throws SQLException;
 

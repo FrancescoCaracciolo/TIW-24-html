@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Optional;
 
 import it.polimi.tiw.beans.Album;
 import it.polimi.tiw.beans.Person;
+import it.polimi.tiw.utils.DAOUtility;
 
 public class AlbumDAO implements DAO<Album, Integer> {
 	private Connection dbConnection;
@@ -27,7 +29,7 @@ public class AlbumDAO implements DAO<Album, Integer> {
 	public AlbumDAO(Connection dbConnection) throws SQLException {
 		this.dbConnection = dbConnection;
 		
-		saveStatement = dbConnection.prepareStatement("INSERT INTO album (title, creator_id) VALUES (?, ?);");
+		saveStatement = dbConnection.prepareStatement("INSERT INTO album (title, creator_id) VALUES (?, ?);", Statement.RETURN_GENERATED_KEYS);
 		updateStatement = dbConnection.prepareStatement("UPDATE album SET title=? WHERE id=?;");
 		deleteStatement = dbConnection.prepareStatement("DELETE FROM album WHERE id=?;");
 		getStatement = dbConnection.prepareStatement("SELECT * FROM album WHERE id=?;");
@@ -78,11 +80,13 @@ public class AlbumDAO implements DAO<Album, Integer> {
 	}
 
 	@Override
-	public void save(String... params) throws SQLException {
+	public Optional<Album> save(String... params) throws SQLException {
 		saveStatement.setString(1, params[0]);
 		saveStatement.setInt(2, Integer.parseInt(params[1]));
 		
-		saveStatement.executeUpdate();
+		Optional<Album> newAlbum = DAOUtility.tryToSave(this, saveStatement);
+		
+		return newAlbum;
 	}
 
 	@Override

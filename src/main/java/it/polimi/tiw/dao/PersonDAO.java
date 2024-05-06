@@ -4,10 +4,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Optional;
 
 import it.polimi.tiw.beans.Album;
+import it.polimi.tiw.beans.Image;
 import it.polimi.tiw.beans.Person;
+import it.polimi.tiw.utils.DAOUtility;
 import it.polimi.tiw.utils.SignUtility;
 
 public class PersonDAO implements DAO<Person, Integer> {
@@ -25,7 +28,7 @@ public class PersonDAO implements DAO<Person, Integer> {
 	public PersonDAO(Connection dbConnection) throws SQLException {
 		this.dbConnection = dbConnection;
 		
-		saveStatement = dbConnection.prepareStatement("INSERT INTO person (username, email, password_hash) VALUES (?, ?, ?);");
+		saveStatement = dbConnection.prepareStatement("INSERT INTO person (username, email, password_hash) VALUES (?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
 		updateStatement = dbConnection.prepareStatement("UPDATE person SET username=?, email=?, password_hash=? WHERE id=?;");
 		deleteStatement = dbConnection.prepareStatement("DELETE FROM person WHERE id=?;");
 		getFromIdStatement = dbConnection.prepareStatement("SELECT * FROM person WHERE id=?;");
@@ -78,14 +81,16 @@ public class PersonDAO implements DAO<Person, Integer> {
 	}
 
 	@Override
-	public void save(String... params) throws SQLException {
+	public Optional<Person> save(String... params) throws SQLException {
 		String hashedSaltedPassword = SignUtility.hashAndSalt(params[2]);
 		
 		saveStatement.setString(1, params[0]);
 		saveStatement.setString(2, params[1]);
 		saveStatement.setString(3, hashedSaltedPassword);
 		
-		saveStatement.executeUpdate();
+		Optional<Person> newPerson = DAOUtility.tryToSave(this, saveStatement);
+		
+		return newPerson;
 	}
 
 	@Override
