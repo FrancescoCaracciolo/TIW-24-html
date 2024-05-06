@@ -10,42 +10,42 @@
             <!-- Section on left - home button, back button button-->
             <div>
             <!-- If the album is null, go back to create album-->
-            <a href="create_album.html" th:href="createAlbum" th:if="${album == null}">
+            <a href="create_album.html" th:href="createAlbum" th:if="${album}">
                 <button class="icon-button button">
                     <img src="icons/back.svg" title="Create album" alt="Album"/>
                 </button>
             </a>
             <!-- If the album is not null, go to the album page-->
-            <a href="album.html" th:href="@{album(id=${album.id})}" th:if="${album != null}">
+            <a href="album.html" th:href="@{album(id=${album.id})}" th:if="${album}">
                 <button class="icon-button button">
                     <img src="icons/back.svg" title="Album page" alt="Album"/>
                 </button>
             </a>
             <a href="home.html" th:href="home">
                 <button class="icon-button button">
-                    <img src="icons/home.svg" title="Back to album page" alt="Home"/>
+                    <img src="icons/home.svg" title="Back to home page" alt="Home"/>
                 </button>
             </a>
         </div>
             <!-- Section on right, username and logout button-->
             <div style="display: flex;">
                 <h1 th:text="${user.username}">Oingo</h1>
-                <a href="/logout" style="margin-right: 3px; margin-left: 10px;">
+                <a href="logout" style="margin-right: 3px; margin-left: 10px;">
                     <button class="button destructive-button">Log out</button>
                 </a>
             </div>
         </div>
 
-        <div class="image-page">
-            <h1 th:text="${image.title}" style="margin-bottom: 0px">Image title</h1>
-            <p style="margin-top: 2px;" th:text="Created by ${image.author.title} on ${image.upload_date}">Created by Pietro on 19/02/1991</p>
-            <img th:src=${image.path} src="img/test.jpg" width="100%">
+        <div class="image-page" th:object="${image}">
+            <h1 th:text="*{title}" style="margin-bottom: 0px">Image title</h1>
+            <p style="margin-top: 2px;" th:text="'Uploaded by ' + ${author.username} + ' on ' + *{uploadDate}">Created by Pietro on 19/02/1991</p>
+            <img th:src=*{filePath} src="img/test.jpg" width="100%">
             <div class="comments">
                 <h2>Comments</h2>
                 <div th:remove="all-but-first">
-                <div class="comment" th:each="comment : ${comments}">
-                    <p class="comment-author" th:text="*{author.username}">Oingo</p>
-                    <p class="comment-text" th:text="*{text}">Fichissimo sto signore!</p>
+                <div class="comment" th:each="comment : ${comments}" th:object="${comment}">
+                    <p class="comment-author" th:text="*{authorId}">Oingo</p>
+                    <p class="comment-text" th:text="*{content}">Fichissimo sto signore!</p>
                 </div>
 
                 <div class="comment">
@@ -63,7 +63,7 @@
             </div>
                 <!--Input form-->
                 <br />
-                <form aciton="addComment" action="post">
+                <form action="addComment" method="post">
                     <label class="input-label">Add comment</label>
                     <input type="text" class="input" />
                     <input type="submit" class="button accent-button" value="Send"/>
