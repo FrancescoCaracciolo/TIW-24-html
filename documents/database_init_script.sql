@@ -37,7 +37,6 @@ CREATE TABLE album (
     creation_date DATE NOT NULL DEFAULT (CURRENT_DATE),
     creator_id INTEGER NOT NULL,
     
-   	CONSTRAINT album_unique UNIQUE (id, creator_id),
     FOREIGN KEY (creator_id) REFERENCES person(id)
 		ON UPDATE CASCADE
         ON DELETE CASCADE,
