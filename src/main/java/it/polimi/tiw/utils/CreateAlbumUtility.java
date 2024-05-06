@@ -82,7 +82,7 @@ public class CreateAlbumUtility {
 		    	file_exists = false;
 		    }
 	    }
-	    return generatedString + "." + extension;
+	    return generatedString + extension;
 	}
 	
 	public static boolean isNumeric(String s) {
