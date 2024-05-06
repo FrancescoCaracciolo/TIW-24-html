@@ -35,24 +35,23 @@ import it.polimi.tiw.utils.CreateAlbumUtility;
 import it.polimi.tiw.utils.SessionUtility;
 
 @WebServlet("/createAlbum")
-@MultipartConfig(
-		  fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
-		  maxFileSize = 1024 * 1024 * 10,      // 10 MB
-		  maxRequestSize = 1024 * 1024 * 100   // 100MB
-		)
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
+		maxFileSize = 1024 * 1024 * 10, // 10 MB
+		maxRequestSize = 1024 * 1024 * 100 // 100MB
+)
 public class CreateAlbumServlet extends ThymeleafServlet {
-    private static final long serialVersionUID = -7297515526961117240L;
-    
-    private AlbumDAO albumDAO;
+	private static final long serialVersionUID = -7297515526961117240L;
+
+	private AlbumDAO albumDAO;
 	private ImageDAO imageDAO;
 
 	public CreateAlbumServlet() {
-        super();
-    }
-	
+		super();
+	}
+
 	public void init() throws ServletException {
 		super.init();
-		
+
 		try {
 			albumDAO = new AlbumDAO(this.dbConnection);
 			imageDAO = new ImageDAO(this.dbConnection);
@@ -61,17 +60,20 @@ public class CreateAlbumServlet extends ThymeleafServlet {
 		}
 	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// If a session doesn't exist or it's invalid, redirect to signin page
 		boolean isSessionInvalid = SessionUtility.redirectOnInvalidSession("logout", request, response);
-		if (isSessionInvalid) return;
-		
+		if (isSessionInvalid)
+			return;
+
 		WebContext ctx = new WebContext(request, response, getServletContext(), response.getLocale());
 		// Get the logged user from the session and export it to the web context
 		Person user = (Person) request.getSession().getAttribute("user");
-		
-		CreateAlbumUtility albumUtil = new CreateAlbumUtility(response, templateEngine, ctx, "create_album", imageDAO, user);
-		
+
+		CreateAlbumUtility albumUtil = new CreateAlbumUtility(response, templateEngine, ctx, "create_album", imageDAO,
+				user);
+
 		// Get the logger user's albums and export them to the web context
 		try {
 			albumUtil.validFromatData();
@@ -80,92 +82,110 @@ public class CreateAlbumServlet extends ThymeleafServlet {
 		}
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// Check session
 		boolean isSessionInvalid = SessionUtility.redirectOnInvalidSession("logout", request, response);
-		if (isSessionInvalid) return;
-		Person user = (Person) request.getSession().getAttribute("user");
-
-		WebContext ctx = new WebContext(request, response, getServletContext(), response.getLocale());
-		CreateAlbumUtility albumUtil = new CreateAlbumUtility(response, templateEngine, ctx, "create_album", imageDAO, user);
-		ServletContext context = request.getServletContext();
+		if (isSessionInvalid)
+			return;
 		if (request.getParameter("image-title") != null) {
-			// The user is trying to upload an image
-			String title = request.getParameter("image-title");
-			if (title.equals("")) {
-				albumUtil.invalidFormData("No title provided");
-				return;
-			}
-			
-			// Receive the file
-		    Part imagePart = request.getPart("image");
-		    if (!imagePart.getContentType().split("/")[0].equals("image")) {
-		    	albumUtil.invalidFormData("The file given was not an image");
-		    	System.out.println(imagePart.getContentType());
-		    	return;
-		    }
-		    InputStream imageContent = imagePart.getInputStream();
-		    String submitted = imagePart.getSubmittedFileName();
-		    String extension = submitted.substring(submitted.lastIndexOf("."));
-		    imagePart.getSubmittedFileName().lastIndexOf(".");
-		    String image_path = albumUtil.getRandomFilePath(context.getInitParameter("uploadDir"), extension);
-		    String full_path = context.getInitParameter("uploadDir") + image_path;
-
-		    try {
-		    	// Try saving the file
-		    	Files.copy(imageContent, new File(full_path).toPath());
-		    } catch (Exception e) {
-		    	albumUtil.invalidFormData("Error saving the file");
-		    	return;
-		    }
-		    // Try saving the image in the database
-		    try {
-			    imageDAO.save(image_path, title, String.valueOf(user.getId()));
-		    } catch (SQLException e) {
-		    	albumUtil.invalidFormData("Error connecting to the database");
-		    	return;
-		    }
+			// Do image upload
+			this.saveImage(request, response);
 		} else if (request.getParameter("album-title") != null) {
-			// The user is trying to create an album
-			String title = request.getParameter("album-title");
-			if (title == "") {
-				albumUtil.invalidFormData("Wrong title given");
-				// TODO: also check for duplicate
-			}
-			try {
-				Set<String> parameters = request.getParameterMap().keySet();
-				int[] ids = parameters.stream().filter(CreateAlbumUtility::isNumeric)
-						.mapToInt(Integer::parseInt).toArray();
-				// Check that every id is from this user
-				for (int id : ids) {
-					Optional<Image> img = imageDAO.get(id);
-					if (img.isEmpty() || img.get().getUploaderId() != user.getId()) {
-				    	albumUtil.invalidFormData("Wrong image selected");
-				    	return;
-					}
-				}
-				// Save the album
-				albumDAO.save(title, String.valueOf(user.getId()));
-				Optional<Album> album = albumDAO.getFromCreatorAndName(user, title);
-				// Save the images
-				for (int id : ids) {
-					if (request.getParameter(String.valueOf(id)).equals("on"))
-						albumDAO.addImage(album.get().getId(), id);
-				}
-				//TODO: avoid refresh sends query again
-			} catch (Exception e) {
-				albumUtil.invalidFormData("Could not connect to the databasae");
-				e.printStackTrace();
-				return;
-			}
-		}
-		
-		try {
-			albumUtil.validFromatData();
-		} catch (Exception e) {
-			albumUtil.invalidFormData("Could not connect to the databasae");
-			e.printStackTrace();
+			// Create album
+			this.createAlbum(request, response);
+		} else {
+			this.doGet(request, response);
 		}
 	}
 
+	private void createAlbum(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		Person user = (Person) request.getSession().getAttribute("user");
+
+		WebContext ctx = new WebContext(request, response, getServletContext(), response.getLocale());
+		CreateAlbumUtility albumUtil = new CreateAlbumUtility(response, templateEngine, ctx, "create_album", imageDAO,
+				user);
+		ServletContext context = request.getServletContext();
+
+		// Check title param
+		String title = request.getParameter("album-title");
+		if (title == "") {
+			albumUtil.invalidFormData("Wrong title given");
+		}
+
+		try {
+			// Get the list of the given parameters
+			Set<String> parameters = request.getParameterMap().keySet();
+			int[] ids = parameters.stream().filter(CreateAlbumUtility::isNumeric).mapToInt(Integer::parseInt).toArray();
+			// Check that every id is an image from this user
+			for (int id : ids) {
+				Optional<Image> img = imageDAO.get(id);
+				if (img.isEmpty() || img.get().getUploaderId() != user.getId()) {
+					albumUtil.invalidFormData("Wrong image selected");
+					return;
+				}
+			}
+
+			// Save the album
+			Optional<Album> album = albumDAO.save(title, String.valueOf(user.getId()));
+			// Save the images
+			for (int id : ids) {
+				if (request.getParameter(String.valueOf(id)).equals("on"))
+					albumDAO.addImage(album.get().getId(), id);
+			}
+			// Send redirect to home
+			response.sendRedirect("home");
+		} catch (SQLException e) {
+			albumUtil.invalidFormData("Could not connect to the database");
+			return;
+		}
+	}
+
+	private void saveImage(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
+		Person user = (Person) request.getSession().getAttribute("user");
+
+		WebContext ctx = new WebContext(request, response, getServletContext(), response.getLocale());
+		CreateAlbumUtility albumUtil = new CreateAlbumUtility(response, templateEngine, ctx, "create_album", imageDAO,
+				user);
+		ServletContext context = request.getServletContext();
+
+		// The user is trying to upload an image
+		String title = request.getParameter("image-title");
+		if (title.equals("")) {
+			albumUtil.invalidFormData("No title provided");
+			return;
+		}
+
+		// Receive the file
+		Part imagePart = request.getPart("image");
+		if (!imagePart.getContentType().split("/")[0].equals("image")) {
+			albumUtil.invalidFormData("The file given was not an image");
+			return;
+		}
+		InputStream imageContent = imagePart.getInputStream();
+		String submitted = imagePart.getSubmittedFileName();
+		String extension = submitted.substring(submitted.lastIndexOf("."));
+		imagePart.getSubmittedFileName().lastIndexOf(".");
+		String image_path = albumUtil.getRandomFilePath(context.getInitParameter("uploadDir"), extension);
+		String full_path = context.getInitParameter("uploadDir") + image_path;
+
+		try {
+			// Try saving the file
+			Files.copy(imageContent, new File(full_path).toPath());
+		} catch (Exception e) {
+			System.out.println(new File(full_path).toPath());
+			e.printStackTrace();
+			albumUtil.invalidFormData("Error saving the file");
+			return;
+		}
+		// Try saving the image in the database
+		try {
+			imageDAO.save(image_path, title, String.valueOf(user.getId()));
+		} catch (SQLException e) {
+			albumUtil.invalidFormData("Error connecting to the database");
+			return;
+		}
+		response.sendRedirect("createAlbum");
+	}
 }
