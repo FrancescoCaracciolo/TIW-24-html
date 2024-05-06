@@ -174,7 +174,6 @@ public class CreateAlbumServlet extends ThymeleafServlet {
 			// Try saving the file
 			Files.copy(imageContent, new File(full_path).toPath());
 		} catch (Exception e) {
-			System.out.println(new File(full_path).toPath());
 			e.printStackTrace();
 			albumUtil.invalidFormData("Error saving the file");
 			return;

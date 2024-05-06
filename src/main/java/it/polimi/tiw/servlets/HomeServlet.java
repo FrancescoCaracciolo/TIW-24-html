@@ -2,6 +2,7 @@ package it.polimi.tiw.servlets;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -56,13 +57,11 @@ public class HomeServlet extends ThymeleafServlet {
 		// Get the logger user's albums and export them to the web context
 		try {
 			List<Album> userAlbums = albumDAO.getFromCreator(user);
-			List<Album> allAlbums = albumDAO.getAll();
-			
-			Map<Integer, Image> albumThumbnail = AlbumUtility.getAlbumThumbnailMap(allAlbums, imageDAO);
-			Map<Integer, Person> albumAuthor = AlbumUtility.getAlbumAuthorMap(allAlbums, personDAO);
+			LinkedHashMap<Album, Image> albumThumbnail = albumDAO.getAlbumThumbnailMap();
+			LinkedHashMap<Album, Person> albumAuthor = albumDAO.getAlbumAuthorMap();
 			
 			ctx.setVariable("userAlbums", userAlbums);
-			ctx.setVariable("allAlbums", allAlbums);
+			ctx.setVariable("allAlbums", albumAuthor.keySet());
 			ctx.setVariable("albumThumbnail", albumThumbnail);
 			ctx.setVariable("albumAuthor", albumAuthor);
 		} catch (SQLException e) {

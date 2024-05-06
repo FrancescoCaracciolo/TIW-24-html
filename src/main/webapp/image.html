@@ -10,13 +10,13 @@
             <!-- Section on left - home button, back button button-->
             <div>
             <!-- If the album is null, go back to create album-->
-            <a href="create_album.html" th:href="createAlbum" th:if="${album}">
+            <a href="create_album.html" th:href="createAlbum" th:if="${album == null}">
                 <button class="icon-button button">
                     <img src="icons/back.svg" title="Create album" alt="Album"/>
                 </button>
             </a>
             <!-- If the album is not null, go to the album page-->
-            <a href="album.html" th:href="@{album(id=${album.id})}" th:if="${album}">
+            <a href="album.html" th:href="@{album(albumId=${album.id})}" th:if="${album != null}">
                 <button class="icon-button button">
                     <img src="icons/back.svg" title="Album page" alt="Album"/>
                 </button>
@@ -39,12 +39,12 @@
         <div class="image-page" th:object="${image}">
             <h1 th:text="*{title}" style="margin-bottom: 0px">Image title</h1>
             <p style="margin-top: 2px;" th:text="'Uploaded by ' + ${author.username} + ' on ' + *{uploadDate}">Created by Pietro on 19/02/1991</p>
-            <img th:src=*{filePath} src="img/test.jpg" width="100%">
+            <img th:src="'images/' + *{filePath}" src="img/test.jpg">
             <div class="comments">
                 <h2>Comments</h2>
                 <div th:remove="all-but-first">
                 <div class="comment" th:each="comment : ${comments}" th:object="${comment}">
-                    <p class="comment-author" th:text="${commentAuthor[__*{id}__].username}">Oingo</p>
+                    <p class="comment-author" th:text="${commentsMap[__comment__].username}">Oingo</p>
                     <p class="comment-text" th:text="*{content}">Fichissimo sto signore!</p>
                 </div>
 
@@ -65,7 +65,9 @@
                 <br />
                 <form action="addComment" method="post">
                     <label class="input-label">Add comment</label>
-                    <input type="text" class="input" />
+                    <input type="text" name="text" class="input" />
+                    <input type="hidden" name="imgId" th:value="${image.id}" />
+                    <input th:if="${album != null}" type="hidden" name="albumId" th:value="${album.id}" />
                     <input type="submit" class="button accent-button" value="Send"/>
                 </form>
             </div>

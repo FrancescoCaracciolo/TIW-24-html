@@ -15,4 +15,23 @@ public class GeneralUtility {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 		}
 	}
+	
+	public static boolean isValidNumericParameter(String param) {
+		if (param == null || param.equals("") || !isNumeric(param) ) {
+			return false;
+		}
+		return true;
+	}
+	
+	public static boolean isNumeric(String s) {
+		if (s==null) {
+			return false;
+		}
+		try {
+			Integer.parseInt(s);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		return true;
+	}
 }

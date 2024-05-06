@@ -7,12 +7,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import it.polimi.tiw.beans.Album;
 import it.polimi.tiw.beans.Comment;
 import it.polimi.tiw.beans.Image;
+import it.polimi.tiw.beans.Person;
 import it.polimi.tiw.utils.DAOUtility;
 
 public class CommentDAO implements DAO<Comment, Integer> {
@@ -23,6 +27,7 @@ public class CommentDAO implements DAO<Comment, Integer> {
 	private PreparedStatement deleteStatement;
 	private PreparedStatement getStatement;
 	private PreparedStatement getFromImageStatement;
+	private PreparedStatement getCommentMapFromImage;
 	
 	public CommentDAO(Connection dbConnection) throws SQLException {
 		this.dbConnection = dbConnection;
@@ -32,6 +37,7 @@ public class CommentDAO implements DAO<Comment, Integer> {
 		deleteStatement = dbConnection.prepareStatement("DELETE FROM text_comment WHERE id=?;");
 		getStatement = dbConnection.prepareStatement("SELECT * FROM text_comment WHERE id=?;");
 		getFromImageStatement = dbConnection.prepareStatement("SELECT * FROM text_comment WHERE image_id=?;");
+		getCommentMapFromImage = dbConnection.prepareStatement("SELECT * FROM text_comment c JOIN person p on c.author_id=p.id WHERE image_id = ?");
 	}
 
 	@Override
@@ -93,7 +99,33 @@ public class CommentDAO implements DAO<Comment, Integer> {
 		deleteStatement.close();
 		getFromImageStatement.close();
 	}
-
+	
+	public LinkedHashMap<Comment, Person> getAuthorsMapFromImage(Image img) throws SQLException {
+		LinkedHashMap<Comment, Person> comments = new LinkedHashMap<>();
+		getCommentMapFromImage.setInt(1, img.getId());
+		ResultSet result = getCommentMapFromImage.executeQuery();
+		
+		// For each row found
+		while (result.next()) {
+			// Fetch comment
+			int fetchedId = result.getInt("c.id");
+			String fetchedContent = result.getString("c.content");
+			int fetchedImage = result.getInt("c.image_id");
+			int fetchedAuthor = result.getInt("c.author_id");
+			
+			Comment fetchedComment = new Comment(fetchedId, fetchedContent, fetchedImage, fetchedAuthor);
+			
+			// Fetch user
+			int fetchedpId = result.getInt("p.id");
+			String fetchedUsername = result.getString("p.username");
+			String fetchedEmail = result.getString("p.email");
+			String fetchedPasswordHash = result.getString("p.password_hash");
+			
+			Person fetchedPerson = new Person(fetchedpId, fetchedUsername, fetchedEmail, fetchedPasswordHash);
+			comments.put(fetchedComment, fetchedPerson);
+		}
+		return comments;
+	}
 	// Utility method
 	private List<Comment> commentsFromResult(ResultSet result) throws SQLException {
 		List<Comment> comments = new ArrayList<>();

@@ -44,7 +44,7 @@
                     <td th:each="image : ${images}" th:object="${image}">
                         <div th:if="${image} != null">
                             <p th:text="*{title}" class="image-title">Image title</p>
-                            <a th:href="@{/image(id=${image.id}, album=${album.id})}">
+                            <a th:href="@{/image(imgId=${image.id}, albumId=${album.id})}">
                                 <img th:src="'images/' + *{filePath}" class="image-thumbnail" src="img/test.jpg">
                             </a>
                         </div>
