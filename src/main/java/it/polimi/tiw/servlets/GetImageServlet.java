@@ -65,6 +65,7 @@ public class GetImageServlet extends DataServlet {
 		String mime = getServletContext().getMimeType(full_path);
 		File f = new File(full_path);
 		if (!f.exists() || f.isDirectory()) {
+			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}
 		response.setHeader("Content-Type", mime);

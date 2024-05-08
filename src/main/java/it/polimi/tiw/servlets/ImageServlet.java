@@ -75,6 +75,7 @@ public class ImageServlet extends ThymeleafServlet {
 				album = albumDAO.get(Integer.parseInt(albumParam));
 			} catch (NumberFormatException | SQLException e) {
 				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				return;
 			}
 		}
 		if (album.isEmpty()) {
@@ -103,7 +104,7 @@ public class ImageServlet extends ThymeleafServlet {
 			ctx.setVariable("commentsMap", comments);
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		
 		templateEngine.process("image", ctx, response.getWriter());

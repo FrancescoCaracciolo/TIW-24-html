@@ -60,7 +60,7 @@ public class HomeServlet extends ThymeleafServlet {
 			ctx.setVariable("albumThumbnail", albumThumbnail);
 			ctx.setVariable("albumAuthor", albumAuthor);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		
 		templateEngine.process("home", ctx, response.getWriter());
