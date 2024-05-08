@@ -1,6 +1,7 @@
 package it.polimi.tiw.servlets;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.Optional;
 
@@ -49,7 +50,7 @@ public class AddCommentServlet extends ThymeleafServlet {
 		Person user = (Person) request.getSession().getAttribute("user");
 		String imgParameter = request.getParameter("imgId");
 		String text = request.getParameter("text");
-		
+
 		if (!GeneralUtility.isValidNumericParameter(imgParameter) || text == null || text.equals("") ) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 			return;
@@ -58,6 +59,10 @@ public class AddCommentServlet extends ThymeleafServlet {
 		try {
 			Optional<Image> img = imageDAO.get(imgId);
 			if (img.isPresent()) {
+				if (text.length() > 4096) {
+					response.sendRedirect("image?imgId=" + String.valueOf(imgId) + "&albumId=" + request.getParameter("albumId") + "&error=" + URLEncoder.encode("The comment is too long", "UTF-8"));
+					return;
+				}
 				commentDAO.save(text, String.valueOf(imgId), String.valueOf(user.getId()));
 			} else {
 				response.sendError(HttpServletResponse.SC_BAD_REQUEST);

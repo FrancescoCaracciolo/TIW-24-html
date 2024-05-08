@@ -46,8 +46,8 @@ public class SigninServlet extends ThymeleafServlet {
 		WebContext ctx = new WebContext(request, response, getServletContext(), response.getLocale());
 		SignUtility util = new SignUtility(response, templateEngine, ctx, "signin");
 
-		if (SignUtility.isNullOrBlank(emailOrUsername) || SignUtility.isNullOrBlank(password)) {
-			util.invalidFormData("Some fields are empty");
+		if (SignUtility.isNullOrBlank(emailOrUsername) || emailOrUsername.length() > 255 || password.length() > 40 || SignUtility.isNullOrBlank(password)) {
+			util.invalidFormData("Some fields are empty or invalid");
 		} else {
 			try {
 				Optional<Person> person = personDAO.getFromEmailOrUsername(emailOrUsername);
@@ -60,7 +60,7 @@ public class SigninServlet extends ThymeleafServlet {
 					util.invalidFormData("Wrong username/email or password");
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			}
 		}
 	}

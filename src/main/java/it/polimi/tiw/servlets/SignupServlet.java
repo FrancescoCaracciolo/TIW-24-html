@@ -52,11 +52,15 @@ public class SignupServlet extends ThymeleafServlet {
 		SignUtility util = new SignUtility(response, templateEngine, ctx, "signup");
 
 		// If some fields haven't been filled
-		if (SignUtility.isNullOrBlank(username) || SignUtility.isNullOrBlank(email)
+		if (email.length() > 255 || SignUtility.isNullOrBlank(username) || SignUtility.isNullOrBlank(email)
 				|| SignUtility.isNullOrBlank(password) || SignUtility.isNullOrBlank(repeatedPassword)) {
-			util.invalidFormData("Some fields are empty");
+			util.invalidFormData("Some fields are empty or invalid");
 
 			// If the given passwords are not equal
+		} else if (password.length() > 40 ) {
+			util.invalidFormData("The password must not exceed 40 characters");
+		} else if (username.length() > 20) {
+			util.invalidFormData("The username must not exceed 20 characters");
 		} else if (!password.equals(repeatedPassword)) {
 			util.invalidFormData("The passwords are not equal");
 

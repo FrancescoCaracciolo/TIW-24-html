@@ -26,9 +26,7 @@ public class AuthenticationCheck implements Filter {
 
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
-		HttpSession s = req.getSession();
 
-		System.out.println("Filtering...");
 		boolean sessionInvalid = SessionUtility.redirectOnInvalidSession("logout", req, res);
 		if (!sessionInvalid) 
 			chain.doFilter(request, response);

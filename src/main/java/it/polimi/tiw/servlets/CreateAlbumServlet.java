@@ -105,8 +105,9 @@ public class CreateAlbumServlet extends ThymeleafServlet {
 
 		// Check title param
 		String title = request.getParameter("album-title");
-		if (title == "") {
-			albumUtil.invalidFormData("Wrong title given");
+		if (title == "" || title.length() > 30) {
+			albumUtil.invalidFormData("Wrong title given, the title must be at least one character and maximum 30 characters");
+			return;
 		}
 
 		try {
@@ -148,8 +149,8 @@ public class CreateAlbumServlet extends ThymeleafServlet {
 
 		// The user is trying to upload an image
 		String title = request.getParameter("image-title");
-		if (title.equals("")) {
-			albumUtil.invalidFormData("No title provided");
+		if (title == "" || title.length() > 30) {
+			albumUtil.invalidFormData("Wrong title given, the title must be at least one character and maximum 30 characters");
 			return;
 		}
 
