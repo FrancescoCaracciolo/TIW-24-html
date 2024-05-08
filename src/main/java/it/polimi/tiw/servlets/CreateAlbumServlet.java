@@ -122,6 +122,10 @@ public class CreateAlbumServlet extends ThymeleafServlet {
 					return;
 				}
 			}
+			if (ids.length < 1) {
+				albumUtil.invalidFormData("You have to choose at least one image to create an album");
+				return;
+			}
 
 			// Save the album
 			Optional<Album> album = albumDAO.save(title, String.valueOf(user.getId()));

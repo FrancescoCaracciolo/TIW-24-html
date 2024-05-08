@@ -98,6 +98,11 @@ public class AlbumPageServlet extends ThymeleafServlet {
 					maxPage++;
 				}
 			}
+			// In case there are not enough images for the requested page
+			// go to the first page
+			if (images.size() < page*5) {
+				page = 0;
+			}
 			
 			// Create image array
 			Optional<Person> albumAuthor = personDAO.get(album.getCreatorId());
