@@ -22,9 +22,11 @@
 		<param-name>dbDriver</param-name>
 		<param-value>com.mysql.cj.jdbc.Driver</param-value>
 	</context-param>
+	
 	<welcome-file-list>
         <welcome-file>signin</welcome-file>
     </welcome-file-list>
+    
     <filter>
 		<filter-name>AuthenticationCheck</filter-name>
 		<filter-class>it.polimi.tiw.filters.AuthenticationCheck</filter-class>
@@ -38,4 +40,21 @@
         <url-pattern>/createAlbum</url-pattern>
         <url-pattern>/addComment</url-pattern>
 	</filter-mapping>
+	
+	<error-page>
+		<error-code>404</error-code>
+		<location>/errors/404.html</location>
+	</error-page>
+		<error-page>
+		<error-code>401</error-code>
+		<location>/errors/401.html</location>
+	</error-page>
+		<error-page>
+		<error-code>500</error-code>
+		<location>/errors/500.html</location>
+	</error-page>
+	<error-page>
+		<error-code>400</error-code>
+		<location>/errors/400.html</location>
+	</error-page>
 </web-app>
