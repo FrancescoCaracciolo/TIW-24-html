@@ -25,4 +25,17 @@
 	<welcome-file-list>
         <welcome-file>signin</welcome-file>
     </welcome-file-list>
+    <filter>
+		<filter-name>AuthenticationCheck</filter-name>
+		<filter-class>it.polimi.tiw.filters.AuthenticationCheck</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>AuthenticationCheck</filter-name>
+		<url-pattern>/home</url-pattern>
+		<url-pattern>/image</url-pattern>
+        <url-pattern>/images/</url-pattern>
+        <url-pattern>/album</url-pattern>
+        <url-pattern>/createAlbum</url-pattern>
+        <url-pattern>/addComment</url-pattern>
+	</filter-mapping>
 </web-app>

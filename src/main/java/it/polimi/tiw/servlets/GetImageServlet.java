@@ -56,9 +56,6 @@ public class GetImageServlet extends DataServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// If a session doesn't exist or it's invalid, redirect to signin page
-		boolean isSessionInvalid = SessionUtility.redirectOnInvalidSession("logout", request, response);
-		if (isSessionInvalid) return;
 		// Initialize variables
 		String currentPath = request.getPathInfo();
 		ServletContext context = request.getServletContext();

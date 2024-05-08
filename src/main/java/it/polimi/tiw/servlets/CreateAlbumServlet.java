@@ -63,10 +63,6 @@ public class CreateAlbumServlet extends ThymeleafServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// If a session doesn't exist or it's invalid, redirect to signin page
-		boolean isSessionInvalid = SessionUtility.redirectOnInvalidSession("logout", request, response);
-		if (isSessionInvalid)
-			return;
-
 		WebContext ctx = new WebContext(request, response, getServletContext(), response.getLocale());
 		// Get the logged user from the session and export it to the web context
 		Person user = (Person) request.getSession().getAttribute("user");
