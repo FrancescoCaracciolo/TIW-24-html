@@ -28,13 +28,17 @@
             </div>
             <h1>Upload a new photo</h1>
             <!-- Upload form-->
-            <p>Choose the photo and the title and then click upload</p>
+            <p>Choose the photo, the title and the description and then click upload</p>
             <form action="createAlbum" method="post" enctype="multipart/form-data">
                 <!-- Image title-->
                 <label class="input-label">Image title</label>
                 <br />
                 <input type="text" class="input" name="image-title"/>
-                
+                <br />
+                <!-- Image description -->
+                <label class="input-label">Image description</label>
+                <br />
+                <textarea class="input" name="image-description" >  </textarea>             
                 <!-- Image upload -->
                 <div style="display: flex; justify-content: center;">
                     <input type="file" id="image-upload" name="image" accept="image/*" hidden required/>

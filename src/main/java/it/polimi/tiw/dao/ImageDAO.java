@@ -30,7 +30,7 @@ public class ImageDAO implements DAO<Image, Integer> {
 	public ImageDAO(Connection dbConnection) throws SQLException {
 		this.dbConnection = dbConnection;
 		
-		saveStatement = dbConnection.prepareStatement("INSERT INTO image (file_path, title, uploader_id) VALUES (?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
+		saveStatement = dbConnection.prepareStatement("INSERT INTO image (file_path, title, description, uploader_id) VALUES (?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
 		updateStatement = dbConnection.prepareStatement("UPDATE image SET title=? WHERE id=?;");
 		deleteStatement = dbConnection.prepareStatement("DELETE FROM image WHERE id=?;");
 		getStatement = dbConnection.prepareStatement("SELECT * FROM image WHERE id=?;");
@@ -69,7 +69,8 @@ public class ImageDAO implements DAO<Image, Integer> {
 	public Optional<Image> save(String... params) throws SQLException {
 		saveStatement.setString(1, params[0]);
 		saveStatement.setString(2, params[1]);
-		saveStatement.setInt(3, Integer.parseInt(params[2]));
+		saveStatement.setString(3, params[2]);
+		saveStatement.setInt(4, Integer.parseInt(params[3]));
 		
 		Optional<Image> newImage = DAOUtility.tryToSave(this, saveStatement);
 		
@@ -137,10 +138,11 @@ public class ImageDAO implements DAO<Image, Integer> {
 			int fetchedId = result.getInt("id");
 			String fetchedPath = result.getString("file_path");
 			String fetchedTitle = result.getString("title");
+			String fetchedDescription = result.getString("description");
 			int fetchedUploader = result.getInt("uploader_id");
 			Date fetchedDate = result.getDate("upload_date");
 			
-			Image fetchedImage = new Image(fetchedId, fetchedPath, fetchedTitle, fetchedUploader, fetchedDate);
+			Image fetchedImage = new Image(fetchedId, fetchedPath, fetchedTitle, fetchedDescription, fetchedUploader, fetchedDate);
 			
 			images.add(fetchedImage);
 		}

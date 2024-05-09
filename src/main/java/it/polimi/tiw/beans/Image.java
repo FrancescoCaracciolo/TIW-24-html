@@ -8,12 +8,14 @@ public class Image {
 	private String filePath;
 	private String title;
 	private int uploaderId;
+	private String description;
 	private Date uploadDate;
 
-	public Image(int id, String filePath, String title, int uploaderId, Date uploadDate) {
+	public Image(int id, String filePath, String title, String description, int uploaderId, Date uploadDate) {
 		this.id = id;
 		this.title = title;
 		this.filePath = filePath;
+		this.description = description;
 		this.uploaderId = uploaderId;
 		this.uploadDate = uploadDate;
 	}
@@ -22,12 +24,20 @@ public class Image {
 		this.title = title;
 	}
 	
+	public void setString(String description) {
+		this.description = description;
+	}
+	
 	public int getId() {
 		return id;
 	}
 	
 	public String getFilePath() {
 		return filePath;
+	}
+	
+	public String getDescription() {
+		return description;
 	}
 	
 	public String getTitle() {

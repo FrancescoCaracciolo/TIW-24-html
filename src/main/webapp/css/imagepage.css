@@ -4,6 +4,10 @@
     justify-content: center;
     text-align: center;
 }
+
+.image-information {
+    margin-bottom: 20px;
+}
 .comments {
     margin-left: 5px;
     margin-right: 5px;

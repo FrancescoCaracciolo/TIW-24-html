@@ -152,9 +152,14 @@ public class CreateAlbumServlet extends ThymeleafServlet {
 
 		// The user is trying to upload an image
 		String title = request.getParameter("image-title");
-		if (title == "" || title.length() > 30) {
+		String description = request.getParameter("image-description");
+		if (title == null || title.isEmpty() || title.length() > 30) {
 			albumUtil.invalidFormData("Wrong title given, the title must be at least one character and maximum 30 characters");
 			return;
+		}
+		if (description == null || description.isEmpty() || description.length() > 4096) {
+			albumUtil.invalidFormData("Wrong description given, the description must be at least one character and maximum 4096 characters");
+			return;	
 		}
 
 		// Receive the file
@@ -180,7 +185,7 @@ public class CreateAlbumServlet extends ThymeleafServlet {
 		}
 		// Try saving the image in the database
 		try {
-			imageDAO.save(image_path, title, String.valueOf(user.getId()));
+			imageDAO.save(image_path, title, description, String.valueOf(user.getId()));
 		} catch (SQLException e) {
 			albumUtil.invalidFormData("Error connecting to the database");
 			return;

@@ -179,10 +179,11 @@ public class AlbumDAO implements DAO<Album, Integer> {
 			int fetchediId = result.getInt("i.id");
 			String fetchedPath = result.getString("i.file_path");
 			String fetchediTitle = result.getString("i.title");
+			String fetchedDescription = result.getString("i.description");
 			int fetchedUploader = result.getInt("i.uploader_id");
 			Date fetchediDate = result.getDate("i.upload_date");
 			
-			Image fetchedImage = new Image(fetchediId, fetchedPath, fetchediTitle, fetchedUploader, fetchediDate);
+			Image fetchedImage = new Image(fetchediId, fetchedPath, fetchediTitle, fetchedDescription, fetchedUploader, fetchediDate);
 			map.put(fetchedAlbum, fetchedImage);
 		}
 		return map;
