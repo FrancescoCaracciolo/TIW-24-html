@@ -45,6 +45,11 @@
 		<p style="margin-top: 2px;"
 			th:text="'Uploaded by ' + ${author.username} + ' on ' + *{uploadDate}">Created
 			by Pietro on 19/02/1991</p>
+		<a href="image.html?delete=1" th:href="@{image(imgId=${image.id}, delete=1)}" th:if="${author.id==user.id}">
+			<button class="button destructive-button">
+				Delete Image
+			</button>
+		</a>
 		<img th:src="'images/' + *{filePath}" src="img/test.jpg">
 		<div class="comments">
 			<h2>Comments</h2>

@@ -36,8 +36,8 @@ public class ImageDAO implements DAO<Image, Integer> {
 		getStatement = dbConnection.prepareStatement("SELECT * FROM image WHERE id=?;");
 		getImageFromPathStatement = dbConnection.prepareStatement("SELECT * FROM image WHERE path = ?");
 		getPersonImagesStatement = dbConnection.prepareStatement("SELECT * FROM image WHERE uploader_id = ?");
-		getAlbumThumbnailStatement = dbConnection.prepareStatement("SELECT i.* FROM image i JOIN image_album ia ON i.id=ia.image_id WHERE ia.album_id=? ORDER BY upload_date;");
-		getAlbumImagesStatement = dbConnection.prepareStatement("SELECT i.* FROM image i JOIN image_album ia ON i.id=ia.image_id WHERE ia.album_id = ?");
+		getAlbumThumbnailStatement = dbConnection.prepareStatement("SELECT i.* FROM image i JOIN image_album ia ON i.id=ia.image_id WHERE ia.album_id=? ORDER BY upload_date DESC, id DESC;");
+		getAlbumImagesStatement = dbConnection.prepareStatement("SELECT i.* FROM image i JOIN image_album ia ON i.id=ia.image_id WHERE ia.album_id = ? ORDER BY i.upload_date DESC, i.id DESC");
 	}
 
 	@Override

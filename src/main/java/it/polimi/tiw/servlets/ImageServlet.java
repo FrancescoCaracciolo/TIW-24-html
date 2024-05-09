@@ -89,6 +89,20 @@ public class ImageServlet extends ThymeleafServlet {
 		
 		try {
 			image = imageDAO.get(imageId);
+			// If the image does not exist
+			if (image.isEmpty()) {
+				response.sendError(HttpServletResponse.SC_NOT_FOUND);
+				return;
+			}
+			// Handle deletion
+			if (request.getParameter("delete") != null) {
+				if (image.get().getUploaderId() == user.getId()) {
+					imageDAO.delete(image.get());
+					albumDAO.deleteEmptyAlbums();
+					response.sendRedirect("home");
+					return;
+				}
+			}
 			
 			GeneralUtility.setCtxVariableIfPresent(ctx, response, "image", image);
 			
@@ -105,6 +119,7 @@ public class ImageServlet extends ThymeleafServlet {
 			
 		} catch (SQLException e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			e.printStackTrace();
 		}
 		
 		templateEngine.process("image", ctx, response.getWriter());
