@@ -57,8 +57,8 @@ public class SignupServlet extends ThymeleafServlet {
 			util.invalidFormData("Some fields are empty or invalid");
 
 			// If the given passwords are not equal
-		} else if (password.length() > 40 ) {
-			util.invalidFormData("The password must not exceed 40 characters");
+		} else if (password.length() > 40 || password.length() < 8) {
+			util.invalidFormData("The password has to be at least 8 characters and must not exceed 40 characters");
 		} else if (username.length() > 20) {
 			util.invalidFormData("The username must not exceed 20 characters");
 		} else if (!password.equals(repeatedPassword)) {
