@@ -136,8 +136,11 @@ public class PersonDAO implements DAO<Person, Integer> {
 		getAlbumAuthorStatement.close();
 	}
 
+	private Optional<Person> personFromResult (ResultSet result) throws SQLException {
+		return personFromResult(result, "");
+	}
 	// Utility method
-	private Optional<Person> personFromResult(ResultSet result) throws SQLException {
+	public static Optional<Person> personFromResult(ResultSet result, String alias) throws SQLException {
 		// If the query fetched no rows
 		if (!result.isBeforeFirst())
 			return Optional.empty();
@@ -146,15 +149,18 @@ public class PersonDAO implements DAO<Person, Integer> {
 			// Move the result index to the first row
 			result.next();
 			
-			// Fetch values
-			int fetchedId = result.getInt("id");
-			String fetchedUsername = result.getString("username");
-			String fetchedEmail = result.getString("email");
-			String fetchedPasswordHash = result.getString("password_hash");
-			
-			Person fetchedPerson = new Person(fetchedId, fetchedUsername, fetchedEmail, fetchedPasswordHash);
+			Person fetchedPerson = fetchPersonFromResult(result, alias);
 			
 			return Optional.ofNullable(fetchedPerson);
 		}
+	}
+	
+	public static Person fetchPersonFromResult(ResultSet result, String alias) throws SQLException {
+		int fetchedId = result.getInt(alias + "id");
+		String fetchedUsername = result.getString(alias + "username");
+		String fetchedEmail = result.getString(alias + "email");
+		String fetchedPasswordHash = result.getString(alias + "password_hash");
+		
+		return new Person(fetchedId, fetchedUsername, fetchedEmail, fetchedPasswordHash);
 	}
 }

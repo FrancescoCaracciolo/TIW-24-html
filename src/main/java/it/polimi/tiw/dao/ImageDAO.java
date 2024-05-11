@@ -7,13 +7,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 
 import it.polimi.tiw.beans.Album;
+import it.polimi.tiw.beans.Comment;
 import it.polimi.tiw.beans.Image;
 import it.polimi.tiw.beans.Person;
 import it.polimi.tiw.utils.DAOUtility;
+import it.polimi.tiw.utils.Pair;
 
 public class ImageDAO implements DAO<Image, Integer> {
 	private Connection dbConnection;
@@ -26,6 +29,7 @@ public class ImageDAO implements DAO<Image, Integer> {
 	private PreparedStatement getPersonImagesStatement;
 	private PreparedStatement getImageFromPathStatement;
 	private PreparedStatement getAlbumImagesStatement;
+	private PreparedStatement getAlbumImagesWithCommentsStatement;
 	
 	public ImageDAO(Connection dbConnection) throws SQLException {
 		this.dbConnection = dbConnection;
@@ -38,6 +42,10 @@ public class ImageDAO implements DAO<Image, Integer> {
 		getPersonImagesStatement = dbConnection.prepareStatement("SELECT * FROM image WHERE uploader_id = ?");
 		getAlbumThumbnailStatement = dbConnection.prepareStatement("SELECT i.* FROM image i JOIN image_album ia ON i.id=ia.image_id WHERE ia.album_id=? ORDER BY upload_date DESC, id DESC;");
 		getAlbumImagesStatement = dbConnection.prepareStatement("SELECT i.* FROM image i JOIN image_album ia ON i.id=ia.image_id WHERE ia.album_id = ? ORDER BY i.upload_date DESC, i.id DESC");
+		getAlbumImagesWithCommentsStatement = dbConnection.prepareStatement("SELECT * "
+				+ "FROM (image i JOIN image_album ia ) LEFT JOIN (text_comment c JOIN person uploader JOIN person author) "
+				+ "ON i.id=ia.image_id AND i.uploader_id = uploader.id AND c.image_id = i.id AND c.author_id = author.id "
+				+ "WHERE ia.album_id = ? ORDER BY i.upload_date DESC, i.id DESC; ");
 	}
 
 	@Override
@@ -128,25 +136,54 @@ public class ImageDAO implements DAO<Image, Integer> {
 		return this.imagesFromResult(result);
 	}
 	
+	public LinkedHashMap<Image, Pair<Person, List<Pair<Person, Comment>>>> getAlbumImagesWithComments(Album album) throws SQLException {
+		LinkedHashMap<Image, Pair<Person, List<Pair<Person, Comment>>>> images = new LinkedHashMap<>();
+		getAlbumImagesWithCommentsStatement.setInt(1, album.getId());
+		ResultSet result = getAlbumImagesWithCommentsStatement.executeQuery();
+		while(result.next()) {
+			// Fetch values
+			Image fetchedImage = imageFromResult(result, "i.");
+			Person fetchedUploader = PersonDAO.fetchPersonFromResult(result, "uploader.");
+			Person fetchedAuthor = PersonDAO.fetchPersonFromResult(result, "author.");
+			Comment fetchedComment = CommentDAO.commentFromResult(result, "c.");
+			
+			List<Pair<Person, Comment>> commentList;
+			if (images.containsKey(fetchedComment)) {
+				commentList = images.get(fetchedImage).second();
+			} else {
+				commentList = new ArrayList<Pair<Person, Comment>>();
+				images.put(fetchedImage, new Pair<>(fetchedUploader, commentList));
+			}
+			if (fetchedComment.getContent() != null) {
+				commentList.add(new Pair<>(fetchedAuthor, fetchedComment));
+			}
+		}
+		return images;
+	}
+	
 	// Utility method
 	private List<Image> imagesFromResult(ResultSet result) throws SQLException {
 		List<Image> images = new ArrayList<>();
 		
 		// For each row found
 		while(result.next()) {
-			// Fetch values
-			int fetchedId = result.getInt("id");
-			String fetchedPath = result.getString("file_path");
-			String fetchedTitle = result.getString("title");
-			String fetchedDescription = result.getString("description");
-			int fetchedUploader = result.getInt("uploader_id");
-			Date fetchedDate = result.getDate("upload_date");
-			
-			Image fetchedImage = new Image(fetchedId, fetchedPath, fetchedTitle, fetchedDescription, fetchedUploader, fetchedDate);
-			
+			Image fetchedImage = imageFromResult(result, "");
 			images.add(fetchedImage);
 		}
 		
 		return images;
+	}
+	
+	public static Image imageFromResult(ResultSet result, String alias) throws SQLException {
+		// Fetch values
+		int fetchedId = result.getInt(alias + "id");
+		String fetchedPath = result.getString(alias + "file_path");
+		String fetchedTitle = result.getString(alias + "title");
+		String fetchedDescription = result.getString(alias + "description");
+		int fetchedUploader = result.getInt(alias + "uploader_id");
+		Date fetchedDate = result.getDate(alias + "upload_date");
+		
+		return new Image(fetchedId, fetchedPath, fetchedTitle, fetchedDescription, fetchedUploader, fetchedDate);
+		
 	}
 }

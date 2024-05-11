@@ -132,17 +132,20 @@ public class CommentDAO implements DAO<Comment, Integer> {
 		
 		// For each row found
 		while(result.next()) {
-			// Fetch values
-			int fetchedId = result.getInt("id");
-			String fetchedContent = result.getString("content");
-			int fetchedImage = result.getInt("image_id");
-			int fetchedAuthor = result.getInt("author_id");
-			
-			Comment fetchedComment = new Comment(fetchedId, fetchedContent, fetchedImage, fetchedAuthor);
-			
+			Comment fetchedComment = commentFromResult(result, "");
 			comments.add(fetchedComment);
 		}
 		
 		return comments;
+	}
+	
+	public static Comment commentFromResult(ResultSet result, String alias) throws SQLException {
+		// Fetch values
+		int fetchedId = result.getInt(alias + "id");
+		String fetchedContent = result.getString(alias + "content");
+		int fetchedImage = result.getInt(alias + "image_id");
+		int fetchedAuthor = result.getInt(alias + "author_id");
+		
+		return new Comment(fetchedId, fetchedContent, fetchedImage, fetchedAuthor);
 	}
 }
