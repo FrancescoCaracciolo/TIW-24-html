@@ -1,0 +1,18 @@
+sequenceDiagram
+    participant SignUp
+    participant PersonDAO
+    participant Home
+    participant CTX
+    participant TemplateEngine
+
+    SignUp ->>+ PersonDAO: new PersonDAO()
+    SignUp ->>+ PersonDAO: save()
+    PersonDAO -->>- SignUp: Person()
+
+    alt Creation successful
+        SignUp -->> Home: redirect
+    else Error with Creation
+        SignUp ->> CTX: setVariable("error", "...")
+        SignUp ->> TemplateEngine: process(ctx, "signin.html", ...)
+    end
+

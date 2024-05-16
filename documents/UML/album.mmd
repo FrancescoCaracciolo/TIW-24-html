@@ -1,0 +1,25 @@
+sequenceDiagram
+    participant AlbumPage
+    participant AlbumDAO
+    participant ImageDAO
+    participant CTX
+    participant TemplateEngine
+
+    AlbumPage ->>+ AlbumDAO: new AlbumDAO()
+    AlbumPage ->> AlbumDAO: get(albumId)
+    alt album exists
+        AlbumDAO -->> AlbumPage: Optional<Album>
+        AlbumPage ->>+ ImageDAO: new ImageDAO()
+        AlbumPage ->> ImageDAO: getAlbumImages(album)
+        ImageDAO -->> AlbumPage: images
+        AlbumPage -->> CTX: setVariable("images". imageArray)
+        AlbumPage -->> CTX: setVariable("album". album)
+        AlbumPage -->> CTX: setVariable("albumAuthor". albumAuthor)
+        AlbumPage -->> TemplateEngine: process(ctx, "album.html")
+    else album does not exist
+        AlbumDAO -->> AlbumPage: Optional.empty()
+        AlbumPage --> AlbumPage: response.sendError(404)
+    end
+
+
+

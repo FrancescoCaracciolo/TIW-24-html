@@ -1,0 +1,16 @@
+sequenceDiagram
+    participant Home
+    participant AlbumDAO
+    participant CTX
+    participant TemplateEngine
+
+    Home ->>+ AlbumDAO: new AlbumDAO()
+    Home ->> AlbumDAO: getAlbumThumbnailMap()
+    AlbumDAO -->> Home: LinkedHashMap<Album, Image>
+    Home ->> AlbumDAO: getAlbumAuthorMap()
+    AlbumDAO -->>- Home: LinkedHashMap<Album, Image>
+    Home ->> CTX: setVariable("albumThumbnail", albumThumbnail)
+    Home ->> CTX: setVariable("albumAuthor", albumAuthor)
+    Home ->> TemplateEngine: process(ctx, "home.html", ...)
+
+
