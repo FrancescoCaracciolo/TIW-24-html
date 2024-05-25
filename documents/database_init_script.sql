@@ -47,7 +47,6 @@ CREATE TABLE album (
 CREATE TABLE image_album (
 	image_id INTEGER,
     album_id INTEGER,
-    order_position INTEGER,
     
     FOREIGN KEY (image_id) REFERENCES image(id)
 		ON UPDATE CASCADE
