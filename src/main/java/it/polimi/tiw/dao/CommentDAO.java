@@ -98,6 +98,7 @@ public class CommentDAO implements DAO<Comment, Integer> {
 		updateStatement.close();
 		deleteStatement.close();
 		getFromImageStatement.close();
+		getCommentMapFromImage.close();
 	}
 	
 	public LinkedHashMap<Comment, Person> getAuthorsMapFromImage(Image img) throws SQLException {

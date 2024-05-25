@@ -123,6 +123,7 @@ public class PersonDAO implements DAO<Person, Integer> {
 		updateStatement.close();
 		deleteStatement.close();
 		getFromEmailOrUsernameStatement.close();
+		getCommentAuthorStatement.close();
 	}
 
 	private Optional<Person> personFromResult (ResultSet result) throws SQLException {
