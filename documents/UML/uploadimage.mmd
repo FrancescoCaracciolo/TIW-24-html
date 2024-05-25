@@ -3,7 +3,6 @@ sequenceDiagram
     participant ImageDAO
     participant CreateAlbumUtility
     participant CTX
-    participant Home
 
     alt error in parameters:
         CreateAlbumServlet ->> CTX: setVariable("error", "Image error...")
