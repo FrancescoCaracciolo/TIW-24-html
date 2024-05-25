@@ -27,7 +27,6 @@ public class AlbumDAO implements DAO<Album, Integer> {
 	private PreparedStatement getAllStatement;
 	private PreparedStatement getFromCreatorStatement;
 	private PreparedStatement addImageStatement;
-	private PreparedStatement getFromCreatorAndName;
 	private PreparedStatement getAlbumAuthors;
 	private PreparedStatement getAlbumThumbnails;
 	private PreparedStatement getAlbumThumbnailsAndCreators;
@@ -45,7 +44,6 @@ public class AlbumDAO implements DAO<Album, Integer> {
 		getAllStatement = dbConnection.prepareStatement("SELECT * FROM album ORDER BY creation_date DESC, id DESC;");
 		getFromCreatorStatement = dbConnection.prepareStatement("SELECT * FROM album WHERE creator_id=? ORDER BY creation_date DESC, id DESC;");
 		addImageStatement = dbConnection.prepareStatement("INSERT INTO image_album (image_id, album_id, order_position) VALUES (?, ?, ?)");
-		getFromCreatorAndName = dbConnection.prepareStatement("SELECT * FROM album WHERE creator_id = ? AND title = ?");
 		getAlbumAuthors = dbConnection.prepareStatement("SELECT * FROM album a JOIN person p ON a.creator_id = p.id");
 		getAlbumThumbnails = dbConnection.prepareStatement("SELECT *"
 				+ " FROM image_album ap JOIN album a JOIN image i ON (ap.album_id = a.id AND ap.image_id = i.id)" 
@@ -85,19 +83,6 @@ public class AlbumDAO implements DAO<Album, Integer> {
 		ResultSet result = getFromCreatorStatement.executeQuery();
 		
 		return albumsFromResult(result);
-	}
-	
-	public Optional<Album> getFromCreatorAndName(Person person, String name) throws SQLException {
-		getFromCreatorAndName.setInt(1, person.getId());
-		getFromCreatorAndName.setString(2, name);
-		
-		ResultSet result = getFromCreatorAndName.executeQuery();
-		
-		List<Album> albums = albumsFromResult(result);
-		
-		return albums.isEmpty()
-				? Optional.empty()
-				: Optional.of(albums.get(0));
 	}
 
 	@Override

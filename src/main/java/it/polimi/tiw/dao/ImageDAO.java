@@ -25,7 +25,6 @@ public class ImageDAO implements DAO<Image, Integer> {
 	private PreparedStatement updateStatement;
 	private PreparedStatement deleteStatement;
 	private PreparedStatement getStatement;
-	private PreparedStatement getAlbumThumbnailStatement;
 	private PreparedStatement getPersonImagesStatement;
 	private PreparedStatement getImageFromPathStatement;
 	private PreparedStatement getAlbumImagesStatement;
@@ -40,7 +39,6 @@ public class ImageDAO implements DAO<Image, Integer> {
 		getStatement = dbConnection.prepareStatement("SELECT * FROM image WHERE id=?;");
 		getImageFromPathStatement = dbConnection.prepareStatement("SELECT * FROM image WHERE path = ?");
 		getPersonImagesStatement = dbConnection.prepareStatement("SELECT * FROM image WHERE uploader_id = ?");
-		getAlbumThumbnailStatement = dbConnection.prepareStatement("SELECT i.* FROM image i JOIN image_album ia ON i.id=ia.image_id WHERE ia.album_id=? ORDER BY upload_date DESC, id DESC;");
 		getAlbumImagesStatement = dbConnection.prepareStatement("SELECT i.* FROM image i JOIN image_album ia ON i.id=ia.image_id WHERE ia.album_id = ? ORDER BY i.upload_date DESC, i.id DESC");
 		getAlbumImagesWithCommentsStatement = dbConnection.prepareStatement("SELECT * "
 				+ "FROM (image i JOIN image_album ia ) LEFT JOIN (text_comment c JOIN person uploader JOIN person author) "
@@ -61,18 +59,6 @@ public class ImageDAO implements DAO<Image, Integer> {
 				: Optional.of(images.get(0));
 	}
 	
-	public Optional<Image> getAlbumThumbnail(Album album) throws SQLException {
-		getAlbumThumbnailStatement.setInt(1, album.getId());
-		
-		ResultSet result = getAlbumThumbnailStatement.executeQuery();
-		
-		List<Image> images = imagesFromResult(result);
-		
-		return images.isEmpty()
-				? Optional.empty()
-				: Optional.of(images.get(0));
-	}
-
 	@Override
 	public Optional<Image> save(String... params) throws SQLException {
 		saveStatement.setString(1, params[0]);
@@ -121,7 +107,6 @@ public class ImageDAO implements DAO<Image, Integer> {
 		saveStatement.close();
 		updateStatement.close();
 		deleteStatement.close();
-		getAlbumThumbnailStatement.close();
 	}
 	
 	public List<Image> getPersonImages(Person person) throws SQLException {

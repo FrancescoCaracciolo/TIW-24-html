@@ -24,7 +24,6 @@ public class PersonDAO implements DAO<Person, Integer> {
 	private PreparedStatement getFromUsernameStatement;
 	private PreparedStatement getFromEmailStatement;
 	private PreparedStatement getFromEmailOrUsernameStatement;
-	private PreparedStatement getAlbumAuthorStatement;
 	private PreparedStatement getCommentAuthorStatement;
 	
 	public PersonDAO(Connection dbConnection) throws SQLException {
@@ -37,7 +36,6 @@ public class PersonDAO implements DAO<Person, Integer> {
 		getFromUsernameStatement = dbConnection.prepareStatement("SELECT * FROM person WHERE username=?;");
 		getFromEmailStatement = dbConnection.prepareStatement("SELECT * FROM person WHERE email=?;");
 		getFromEmailOrUsernameStatement = dbConnection.prepareStatement("SELECT * FROM person WHERE username = ? or email = ?");
-		getAlbumAuthorStatement = dbConnection.prepareStatement("SELECT p.* FROM album a JOIN person p ON a.creator_id=p.id WHERE a.id=?;");
 		getCommentAuthorStatement = dbConnection.prepareStatement("SELECT p.* FROM text_comment c JOIN person p ON c.author_id=p.id WHERE c.id=?;");
 	}
 	
@@ -49,15 +47,7 @@ public class PersonDAO implements DAO<Person, Integer> {
 		
 		return personFromResult(result);
 	}
-	
-	public Optional<Person> getAlbumAuthor(Album album) throws SQLException {
-		getAlbumAuthorStatement.setInt(1, album.getId());
-		
-		ResultSet result = getAlbumAuthorStatement.executeQuery();
-		
-		return personFromResult(result);
-	}
-	
+
 	public Optional<Person> getCommentAuthor(Comment comment) throws SQLException {
 		getCommentAuthorStatement.setInt(1, comment.getId());
 		
@@ -133,7 +123,6 @@ public class PersonDAO implements DAO<Person, Integer> {
 		updateStatement.close();
 		deleteStatement.close();
 		getFromEmailOrUsernameStatement.close();
-		getAlbumAuthorStatement.close();
 	}
 
 	private Optional<Person> personFromResult (ResultSet result) throws SQLException {
