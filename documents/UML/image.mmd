@@ -1,0 +1,35 @@
+
+sequenceDiagram
+    participant ImageServlet
+    participant AlbumDAO
+    participant ImageDAO
+    participant CTX
+    participant PersonDAO
+    participant CommentDAO
+    participant TemplateEngine
+
+    ImageServlet ->>+ AlbumDAO: new AlbumDAO()
+    ImageServlet ->> AlbumDAO: get(albumId)
+    alt album exists
+        AlbumDAO -->>- ImageServlet: Optional<Album>
+
+    else album does not exist
+        AlbumDAO -->> ImageServlet: Optional.empty()
+        ImageServlet --> ImageServlet: album = null
+    end
+    ImageServlet ->>+ ImageDAO: new ImageDAO()
+    ImageServlet ->> ImageDAO: get(imageDAO)
+    alt image does not exist
+        ImageDAO ->>- ImageServlet: Optional.empty()
+        ImageServlet --> ImageServlet: response.sendError(404)
+    else image exists
+        ImageServlet ->> PersonDAO: author = get(image.get().uploaderId) 
+        ImageServlet ->> CommentDAO: comments = getAuthorsMapFromImage(image.get())
+        ImageServlet ->> CTX: setVariable("commentsMap", comments) 
+        ImageServlet ->> CTX: setVariable("album", album) 
+        ImageServlet ->> CTX: setVariable("image", image) 
+        ImageServlet ->> CTX: setVariable("author", author) 
+    end
+        
+
+

@@ -1,0 +1,22 @@
+
+sequenceDiagram
+    participant CreateAlbumServlet
+    participant ImageDAO
+    participant AlbumDAO
+    participant CTX
+    participant Home
+    Note left of CreateAlbumServlet: For each image id given:
+    CreateAlbumServlet ->> ImageDAO: image.get(id)
+    alt image does not exist or user is not the uploader:
+        CreateAlbumServlet ->> CTX: setVariable("error", "Wrong image selected")
+        Note left of CreateAlbumServlet: Show create album page...
+    else
+        CreateAlbumServlet ->> AlbumDAO: album = save(title, user.getId())
+        Note left of CreateAlbumServlet: for each image id given
+        CreateAlbumServlet ->> AlbumDAO: addImage(album.getId(), id)
+        CreateAlbumServlet ->> Home: sendRedirect("home")
+    end
+    
+
+        
+

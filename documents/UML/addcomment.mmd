@@ -1,0 +1,22 @@
+
+sequenceDiagram
+    participant AddCommentServlet
+    participant ImageDAO
+    participant CommentDao
+    participant PersonDAO
+
+    AddCommentServlet ->> ImageDAO: get(imageId)
+    alt image does not exist
+        AddCommentServlet ->> AddCommentServlet: sendError(400)
+    end
+    alt comment is too long
+        AddCommentServlet ->> ImageServlet: sendRedirect("image?...&error=comment...")
+    else
+        AddCommentServlet ->> CommentDao: save()
+        AddCommentServlet ->> ImageServlet: sendRedirect("image?imageId=...")
+
+    end
+
+        
+
+

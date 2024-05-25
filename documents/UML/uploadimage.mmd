@@ -1,0 +1,15 @@
+sequenceDiagram
+    participant CreateAlbumServlet
+    participant ImageDAO
+    participant CreateAlbumUtility
+    participant CTX
+    participant Home
+
+    alt error in parameters:
+        CreateAlbumServlet ->> CTX: setVariable("error", "Image error...")
+        Note left of CreateAlbumServlet: Show create album page...
+    else
+    CreateAlbumServlet ->> CreateAlbumUtility: createRandomFilePath(context.getInitParameter(uploadDir), extension)
+    CreateAlbumServlet ->> ImageDAO: save(image_path, title, description, user.getId())
+    CreateAlbumServlet ->> CreateAlbumServlet: sendRedirect("createAlbum")
+    end         

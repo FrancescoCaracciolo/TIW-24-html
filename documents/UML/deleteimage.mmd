@@ -1,0 +1,27 @@
+sequenceDiagram
+    participant ImageServlet
+    participant AlbumDAO
+    participant ImageDAO
+    participant PersonDAO
+
+
+    ImageServlet ->>+ AlbumDAO: new AlbumDAO()
+    ImageServlet ->> AlbumDAO: get(albumId)
+    Note left of ImageServlet: Same checks as Image Page
+    ImageServlet ->>+ ImageDAO: new ImageDAO()
+    ImageServlet ->> ImageDAO: get(imageDAO)
+    alt image does not exist
+        ImageDAO ->>- ImageServlet: Optional.empty()
+        ImageServlet --> ImageServlet: response.sendError(404)
+    else image exists
+        ImageServlet ->> PersonDAO: author = get(image.get().uploaderId) 
+        alt user is the author and delete != null
+            ImageServlet ->> ImageDAO: delete(image.get())
+            ImageServlet ->> AlbumDAO: deleteEmptyAlbums()
+            ImageServlet ->> ImageServlet: sendRedirect("home")
+        else user is not the author
+            Note left of ImageServlet: Show normai image page...
+        end
+     
+    end
+        

@@ -1,0 +1,11 @@
+sequenceDiagram
+    participant CreateAlbumServlet
+    participant ImageDAO
+    participant CTX
+    participant TemplateEngine
+
+    CreateAlbumServlet ->> ImageDAO: getPersonImages(user)
+    ImageDAO -->> CreateAlbumServlet: List<Image>
+    CreateAlbumServlet ->> CTX: setVariable("userPhotos", userPhotos)
+    CreateAlbumServlet ->> CTX: setVariable("user", user)
+    CreateAlbumServlet ->> TemplateEngine: process("createalbum",ctx, response.getWriter())
