@@ -24,8 +24,7 @@ public class SignupServlet extends ThymeleafServlet {
 		super();
 	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// If a session already exists, redirect to homepage
 		boolean isSessionValid = SessionUtility.redirectOnValidSession("home", request, response);
 		if (isSessionValid)
@@ -35,42 +34,43 @@ public class SignupServlet extends ThymeleafServlet {
 		WebContext ctx = new WebContext(request, response, getServletContext(), response.getLocale());
 		ctx.setVariable("error", false);
 
-		templateEngine.process("signup", ctx, response.getWriter());
+		templateEngine.process("sign", ctx, response.getWriter());
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		String username = request.getParameter("username");
-		String email = request.getParameter("email");
-		String password = request.getParameter("password");
-		String repeatedPassword = request.getParameter("repeat-password");
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String username = request.getParameter("signup-username");
+		String email = request.getParameter("signup-email");
+		String password = request.getParameter("signup-password");
+		String repeatedPassword = request.getParameter("signup-repeat-password");
 
 		// Create a new session
 		HttpSession session = request.getSession(true);
 
 		WebContext ctx = new WebContext(request, response, getServletContext(), response.getLocale());
-		SignUtility util = new SignUtility(response, templateEngine, ctx, "signup");
+		SignUtility util = new SignUtility(response, templateEngine, ctx, "sign");
 
 		// If some fields haven't been filled
 		if (email.length() > 255 || SignUtility.isNullOrBlank(username) || SignUtility.isNullOrBlank(email)
 				|| SignUtility.isNullOrBlank(password) || SignUtility.isNullOrBlank(repeatedPassword)) {
 			util.invalidFormData("Some fields are empty or invalid");
 
-			// If the given passwords are not equal
+		// If the fields lentgth isn't valid
 		} else if (password.length() > 40 || password.length() < 8) {
 			util.invalidFormData("The password has to be at least 8 characters and must not exceed 40 characters");
 		} else if (username.length() > 20) {
 			util.invalidFormData("The username must not exceed 20 characters");
+			
+		// If the given passwords are not equal
 		} else if (!password.equals(repeatedPassword)) {
 			util.invalidFormData("The passwords are not equal");
 
-			// If the email doesn't have a vaild format
+		// If the email doesn't have a vaild format
 		} else if (!SignUtility.isEmailValid(email)) {
 			util.invalidFormData("The email is not valid");
 
-			// If the form is valid
+		// If the form is valid
 		} else {
-				// Try saving the new user on the db
+			// Try saving the new user on the db
 			Optional<Person> createdPerson;
 			try {
 				createdPerson = personDAO.save(username, email, password);

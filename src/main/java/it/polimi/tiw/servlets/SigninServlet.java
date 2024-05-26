@@ -27,24 +27,25 @@ public class SigninServlet extends ThymeleafServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// If a session already exists, redirect to homepage
 		boolean isSessionValid = SessionUtility.redirectOnValidSession("home", request, response);
-		if (isSessionValid) return;
+		if (isSessionValid) 
+			return;
 		
 		// Otherwise, load the signin.html page
 		WebContext ctx = new WebContext(request, response, getServletContext(), response.getLocale());
 		ctx.setVariable("error", false);
 		
-		templateEngine.process("signin", ctx, response.getWriter());	
+		templateEngine.process("sign", ctx, response.getWriter());	
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String emailOrUsername = request.getParameter("email-username");
-		String password = request.getParameter("password");
+		String emailOrUsername = request.getParameter("signin-email-username");
+		String password = request.getParameter("signin-password");
 		
 		// Create a new session
 		HttpSession session = request.getSession(true);
 		
 		WebContext ctx = new WebContext(request, response, getServletContext(), response.getLocale());
-		SignUtility util = new SignUtility(response, templateEngine, ctx, "signin");
+		SignUtility util = new SignUtility(response, templateEngine, ctx, "sign");
 
 		if (SignUtility.isNullOrBlank(emailOrUsername) || emailOrUsername.length() > 255 || password.length() > 40 || SignUtility.isNullOrBlank(password)) {
 			util.invalidFormData("Some fields are empty or invalid");
