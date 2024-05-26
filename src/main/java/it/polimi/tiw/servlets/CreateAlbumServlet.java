@@ -1,18 +1,11 @@
 package it.polimi.tiw.servlets;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 import java.util.Set;
 
 import javax.servlet.ServletContext;
@@ -59,15 +52,13 @@ public class CreateAlbumServlet extends ThymeleafServlet {
 		}
 	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// If a session doesn't exist or it's invalid, redirect to signin page
 		WebContext ctx = new WebContext(request, response, getServletContext(), response.getLocale());
 		// Get the logged user from the session and export it to the web context
 		Person user = (Person) request.getSession().getAttribute("user");
 
-		CreateAlbumUtility albumUtil = new CreateAlbumUtility(response, templateEngine, ctx, "create_album", imageDAO,
-				user);
+		CreateAlbumUtility albumUtil = new CreateAlbumUtility(response, templateEngine, ctx, "create_album", imageDAO, user);
 
 		// Get the logger user's albums and export them to the web context
 		try {
@@ -77,8 +68,7 @@ public class CreateAlbumServlet extends ThymeleafServlet {
 		}
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Check session
 		boolean isSessionInvalid = SessionUtility.redirectOnInvalidSession("logout", request, response);
 		if (isSessionInvalid)
@@ -98,8 +88,7 @@ public class CreateAlbumServlet extends ThymeleafServlet {
 		Person user = (Person) request.getSession().getAttribute("user");
 
 		WebContext ctx = new WebContext(request, response, getServletContext(), response.getLocale());
-		CreateAlbumUtility albumUtil = new CreateAlbumUtility(response, templateEngine, ctx, "create_album", imageDAO,
-				user);
+		CreateAlbumUtility albumUtil = new CreateAlbumUtility(response, templateEngine, ctx, "create_album", imageDAO, user);
 		ServletContext context = request.getServletContext();
 
 		// Check title param
@@ -193,7 +182,7 @@ public class CreateAlbumServlet extends ThymeleafServlet {
 		response.sendRedirect("createAlbum");
 	}
 	
-	public void destory() {
+	public void destroy() {
 		super.destroy();
 		try {
 			if (this.albumDAO != null) {

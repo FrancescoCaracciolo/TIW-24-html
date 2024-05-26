@@ -1,28 +1,13 @@
 package it.polimi.tiw.servlets;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
-import java.util.Set;
-
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
-
 import org.thymeleaf.context.WebContext;
 
 import it.polimi.tiw.beans.Album;
@@ -31,10 +16,8 @@ import it.polimi.tiw.beans.Person;
 import it.polimi.tiw.dao.AlbumDAO;
 import it.polimi.tiw.dao.ImageDAO;
 import it.polimi.tiw.utils.CreateAlbumUtility;
-import it.polimi.tiw.utils.SessionUtility;
 
 @WebServlet("/album")
-
 public class AlbumPageServlet extends ThymeleafServlet {
     private static final long serialVersionUID = -7297515526961117240L;
     
@@ -129,7 +112,7 @@ public class AlbumPageServlet extends ThymeleafServlet {
 		this.doGet(request, response);
 	}
 	
-	public void destory() {
+	public void destroy() {
 		super.destroy();
 		try {
 			if (this.albumDAO != null) {

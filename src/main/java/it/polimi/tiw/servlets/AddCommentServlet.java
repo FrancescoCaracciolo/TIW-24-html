@@ -17,7 +17,6 @@ import it.polimi.tiw.beans.Person;
 import it.polimi.tiw.dao.CommentDAO;
 import it.polimi.tiw.dao.ImageDAO;
 import it.polimi.tiw.utils.GeneralUtility;
-import it.polimi.tiw.utils.SessionUtility;
 
 @WebServlet("/addComment")
 public class AddCommentServlet extends ThymeleafServlet {
@@ -78,7 +77,7 @@ public class AddCommentServlet extends ThymeleafServlet {
 		response.sendRedirect("image?imgId=" + String.valueOf(imgId) + "&albumId=" + request.getParameter("albumId"));
 	}
 	
-	public void destory() {
+	public void destroy() {
 		super.destroy();
 		try {
 			if (this.commentDAO != null) {

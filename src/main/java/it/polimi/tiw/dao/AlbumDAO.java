@@ -43,7 +43,7 @@ public class AlbumDAO implements DAO<Album, Integer> {
 		getStatement = dbConnection.prepareStatement("SELECT * FROM album WHERE id=?;");
 		getAllStatement = dbConnection.prepareStatement("SELECT * FROM album ORDER BY creation_date DESC, id DESC;");
 		getFromCreatorStatement = dbConnection.prepareStatement("SELECT * FROM album WHERE creator_id=? ORDER BY creation_date DESC, id DESC;");
-		addImageStatement = dbConnection.prepareStatement("INSERT INTO image_album (image_id, album_id, order_position) VALUES (?, ?, ?)");
+		addImageStatement = dbConnection.prepareStatement("INSERT INTO image_album (image_id, album_id) VALUES (?, ?)");
 		getAlbumAuthors = dbConnection.prepareStatement("SELECT * FROM album a JOIN person p ON a.creator_id = p.id");
 		getAlbumThumbnails = dbConnection.prepareStatement("SELECT *"
 				+ " FROM image_album ap JOIN album a JOIN image i ON (ap.album_id = a.id AND ap.image_id = i.id)" 
@@ -135,7 +135,6 @@ public class AlbumDAO implements DAO<Album, Integer> {
 	public void addImage(int albumId, int imageId) throws SQLException {
 		addImageStatement.setInt(1, imageId);
 		addImageStatement.setInt(2, albumId);
-		addImageStatement.setInt(3, 0);
 		
 		addImageStatement.executeUpdate();
 	}

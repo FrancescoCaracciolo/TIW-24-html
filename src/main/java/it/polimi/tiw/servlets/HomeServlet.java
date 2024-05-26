@@ -70,7 +70,7 @@ public class HomeServlet extends ThymeleafServlet {
 		this.doGet(request, response);
 	}
 	
-	public void destory() {
+	public void destroy() {
 		super.destroy();
 		try {
 			if (this.albumDAO != null) {
