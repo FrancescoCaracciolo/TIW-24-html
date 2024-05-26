@@ -12,21 +12,45 @@
                 <div class="error-container" th:if="${error}">
                     <p th:text="${errorMessage}">Wrong username/email or password</p>
                 </div>
-                <div class="sign-form">
-                    <h1>Sign in</h1>
-                    <form method="post" action="signin">
-                        <label class="sign-label">E-mail / Username</label>
-                        <br />
-                        <input class="sign-input" type="text" name="email-username">
-                        <br />
-                        <label class="sign-label">Password</label>
-                        <br />
-                        <input class="sign-input" type="password" name="password">
-                        <br />
-                        <input type="submit" class="button accent-button" value="Sign In">
-                    </form>
+                <div class="sign-forms-container">
+                    <div class="sign-form">
+                        <h1>Sign in</h1>
+                        <form method="post" action="signin">
+                            <label class="sign-label">E-mail / Username</label>
+                            <br />
+                            <input class="sign-input" type="text" name="email-username">
+                            <br />
+                            <label class="sign-label">Password</label>
+                            <br />
+                            <input class="sign-input" type="password" name="password">
+                            <br />
+                            <input type="submit" class="button accent-button" value="Sign In">
+                        </form>
+                    </div>
+                    <div style="width: 30px;"></div>
+                    <div class="sign-form">
+                        <h1>Sign up</h1>
+                        <form method="post" action="signin">
+                            <label class="sign-label">Username</label>
+                            <br />
+                            <input class="sign-input" type="text" name="username" />
+                            <br />
+                            <label class="sign-label">E-mail</label>
+                            <br />
+                            <input class="sign-input" type="email" name="email" />
+                            <br />
+                            <label class="sign-label">Password</label>
+                            <br />
+                            <input class="sign-input" type="password" name="password" />
+                            <br />
+                            <label class="sign-label">Repeat password</label>
+                            <br />
+                            <input class="sign-input" type="password" name="repeat-password">
+                            <br />
+                            <input type="submit" class="button accent-button" value="Sign Up" />
+                        </form>
+                    </div>
                 </div>
-                <p class="extra-text"> Don't have an account? <a class="link" href="signup">Sign up</a></p>
             </div>
         </div>
     </body>

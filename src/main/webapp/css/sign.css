@@ -10,7 +10,13 @@
     justify-content: center;
     margin: auto;
 }
-
+.sign-forms-container {
+    display: flex;
+    margin: auto;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+}
 .sign-form {
     /* colors and style */
     background-color: var(--primary-container);
