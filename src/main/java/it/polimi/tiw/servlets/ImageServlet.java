@@ -129,5 +129,22 @@ public class ImageServlet extends ThymeleafServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		this.doGet(request, response);
 	}
+	
+	public void destory() {
+		super.destroy();
+		try {
+			if (this.albumDAO != null) {
+				this.albumDAO.close();
+			}
+			if (this.imageDAO != null) {
+				this.imageDAO.close();
+			}
+			if (this.commentDAO != null) {
+				this.commentDAO.close();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 }

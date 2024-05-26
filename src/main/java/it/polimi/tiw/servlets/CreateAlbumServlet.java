@@ -192,4 +192,18 @@ public class CreateAlbumServlet extends ThymeleafServlet {
 		}
 		response.sendRedirect("createAlbum");
 	}
+	
+	public void destory() {
+		super.destroy();
+		try {
+			if (this.albumDAO != null) {
+				this.albumDAO.close();
+			}
+			if (this.imageDAO != null) {
+				this.imageDAO.close();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }

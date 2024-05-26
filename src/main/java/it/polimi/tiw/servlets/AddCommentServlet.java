@@ -50,19 +50,22 @@ public class AddCommentServlet extends ThymeleafServlet {
 		Person user = (Person) request.getSession().getAttribute("user");
 		String imgParameter = request.getParameter("imgId");
 		String text = request.getParameter("text");
-
+		
+		// Check validity of the parameters
 		if (!GeneralUtility.isValidNumericParameter(imgParameter) || text == null || text.equals("") ) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 			return;
 		}
+		// Check if the text is not too long
 		Integer imgId = Integer.parseInt(imgParameter);
+		if (text.length() > 4096) {
+			response.sendRedirect("image?imgId=" + String.valueOf(imgId) + "&albumId=" + request.getParameter("albumId") + "&error=" + URLEncoder.encode("The comment is too long", "UTF-8"));
+			return;
+		}
 		try {
 			Optional<Image> img = imageDAO.get(imgId);
+			// If the image exists, save the comment
 			if (img.isPresent()) {
-				if (text.length() > 4096) {
-					response.sendRedirect("image?imgId=" + String.valueOf(imgId) + "&albumId=" + request.getParameter("albumId") + "&error=" + URLEncoder.encode("The comment is too long", "UTF-8"));
-					return;
-				}
 				commentDAO.save(text, String.valueOf(imgId), String.valueOf(user.getId()));
 			} else {
 				response.sendError(HttpServletResponse.SC_BAD_REQUEST);
@@ -73,5 +76,19 @@ public class AddCommentServlet extends ThymeleafServlet {
 			return;
 		}
 		response.sendRedirect("image?imgId=" + String.valueOf(imgId) + "&albumId=" + request.getParameter("albumId"));
+	}
+	
+	public void destory() {
+		super.destroy();
+		try {
+			if (this.commentDAO != null) {
+				this.commentDAO.close();
+			}
+			if (this.imageDAO != null) {
+				this.imageDAO.close();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

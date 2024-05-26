@@ -42,4 +42,17 @@ public abstract class DataServlet extends HttpServlet {
 			throw new UnavailableException("Cannot get database connection" + e.getStackTrace());
 		}
 	}
+    
+	public void destroy() {
+		try {
+			if (this.personDAO != null) {
+				personDAO.close();
+			}
+			if (this.dbConnection != null) {
+				dbConnection.close();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }
