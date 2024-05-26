@@ -16,6 +16,7 @@ public class LogoutServlet extends DataServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// Invalidate the session and redirect to signin
 		request.getSession().invalidate();
 		response.sendRedirect("signin");
 	}

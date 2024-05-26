@@ -164,7 +164,7 @@ public class CreateAlbumServlet extends ThymeleafServlet {
 
 		// Receive the file
 		Part imagePart = request.getPart("image");
-		if (!imagePart.getContentType().split("/")[0].equals("image")) {
+		if (imagePart.getContentType() != null && !imagePart.getContentType().split("/")[0].equals("image")) {
 			albumUtil.invalidFormData("The file given was not an image");
 			return;
 		}
@@ -172,7 +172,7 @@ public class CreateAlbumServlet extends ThymeleafServlet {
 		String submitted = imagePart.getSubmittedFileName();
 		String extension = submitted.substring(submitted.lastIndexOf("."));
 		imagePart.getSubmittedFileName().lastIndexOf(".");
-		String image_path = albumUtil.getRandomFilePath(context.getInitParameter("uploadDir"), extension);
+		String image_path = CreateAlbumUtility.getRandomFilePath(context.getInitParameter("uploadDir"), extension);
 		String full_path = context.getInitParameter("uploadDir") + image_path;
 
 		try {

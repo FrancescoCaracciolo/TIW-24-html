@@ -38,6 +38,7 @@ public class CreateAlbumUtility {
 	}
 	
 	public void invalidFormData(String errorMessage) throws IOException {
+		// Create a page with errors
 		ctx.setVariable("error", true);
 		ctx.setVariable("errorMessage", errorMessage);
 		try {
@@ -60,12 +61,13 @@ public class CreateAlbumUtility {
 	}
 	
 	/**
+	 * Create a random file path to store the image
 	 * @param targetPath path to check, ending with /
 	 * @param extension file extension
 	 * @return File name (ex. image.png)
 	 */
 	public static String getRandomFilePath(String targetPath, String extension) {
-	    int targetStringLength = 10;
+		int targetStringLength = 10;
 	    Random random = new Random();
 	    boolean file_exists = true;
 	    String generatedString = "";
@@ -85,6 +87,7 @@ public class CreateAlbumUtility {
 	    return generatedString + extension;
 	}
 	
+	// Check if a string is numeric
 	public static boolean isNumeric(String s) {
 		if (s==null) {
 			return false;

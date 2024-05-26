@@ -78,6 +78,8 @@ public class ImageServlet extends ThymeleafServlet {
 				return;
 			}
 		}
+		// Set the album variable in order to know from
+		// which album page the user is from
 		if (album.isEmpty()) {
 			ctx.setVariable("album", null);
 		} else {
@@ -97,8 +99,11 @@ public class ImageServlet extends ThymeleafServlet {
 			// Handle deletion
 			if (request.getParameter("delete") != null) {
 				if (image.get().getUploaderId() == user.getId()) {
+					// Delete the image
 					imageDAO.delete(image.get());
+					// Delete albums without images
 					albumDAO.deleteEmptyAlbums();
+					// Redirect the user to the home page
 					response.sendRedirect("home");
 					return;
 				}
@@ -108,10 +113,12 @@ public class ImageServlet extends ThymeleafServlet {
 			
 			int uploderid = image.get().getUploaderId();
 
+			// Get author info
 			author = this.personDAO.get(uploderid);
 			
 			GeneralUtility.setCtxVariableIfPresent(ctx, response, "author", author);
 			
+			// Get comments
 			LinkedHashMap<Comment, Person> comments = commentDAO.getAuthorsMapFromImage(image.get());
 			
 			ctx.setVariable("comments", comments.keySet());
