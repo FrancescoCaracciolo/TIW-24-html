@@ -48,7 +48,6 @@ public class AlbumDAO implements DAO<Album, Integer> {
 		getAlbumThumbnails = dbConnection.prepareStatement("SELECT *"
 				+ " FROM image_album ap JOIN album a JOIN image i ON (ap.album_id = a.id AND ap.image_id = i.id)" 
 				+ " WHERE i.id <= (SELECT MIN(i2.id) FROM image_album ia2 JOIN image i2 ON i2.id = ia2.image_id  WHERE album_id = a.id);");
-		
 		getAlbumThumbnailsAndCreators = dbConnection.prepareStatement("SELECT * \n"
 				+ "FROM image_album ap JOIN album a JOIN image i JOIN person p ON (ap.album_id = a.id AND ap.image_id = i.id AND a.creator_id = p.id) \n"
 				+ "WHERE i.id <= (SELECT MIN(i2.id) FROM image_album ia2 JOIN image i2 ON i2.id = ia2.image_id  WHERE album_id = a.id)"

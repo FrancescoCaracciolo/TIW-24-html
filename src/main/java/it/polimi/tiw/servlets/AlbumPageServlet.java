@@ -41,7 +41,7 @@ public class AlbumPageServlet extends ThymeleafServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		WebContext ctx = new WebContext(request, response, getServletContext(), response.getLocale());
-		CreateAlbumUtility albumUtil = new CreateAlbumUtility(response, templateEngine, ctx, getServletInfo(), imageDAO, null);
+		CreateAlbumUtility albumUtil = new CreateAlbumUtility(response);
 		
 		// Get the logged user from the session and export it to the web context
 		Person user = (Person) request.getSession().getAttribute("user");

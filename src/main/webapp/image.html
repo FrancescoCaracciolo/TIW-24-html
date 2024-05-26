@@ -9,13 +9,6 @@
 	<div class="navbar">
 		<!-- Section on left - home button, back button button-->
 		<div>
-			<!-- If the album is null, go back to create album-->
-			<a href="create_album.html" th:href="createAlbum"
-				th:if="${album == null}">
-				<button class="icon-button button">
-					<img src="icons/back.svg" title="Create album" alt="Album" />
-				</button>
-			</a>
 			<!-- If the album is not null, go to the album page-->
 			<a href="album.html" th:href="@{album(albumId=${album.id})}"
 				th:if="${album != null}">

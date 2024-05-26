@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +16,6 @@ import it.polimi.tiw.beans.Image;
 import it.polimi.tiw.beans.Person;
 import it.polimi.tiw.dao.AlbumDAO;
 import it.polimi.tiw.dao.ImageDAO;
-import it.polimi.tiw.utils.SessionUtility;
 
 @WebServlet("/home")
 public class HomeServlet extends ThymeleafServlet {
@@ -49,16 +46,24 @@ public class HomeServlet extends ThymeleafServlet {
 		Person user = (Person) request.getSession().getAttribute("user");
 		ctx.setVariable("user", user);
 		
+		// Check for errors from addComment servlet
+		if (request.getParameter("error") != null) {
+			ctx.setVariable("error", true);
+			ctx.setVariable("errorMessage", request.getParameter("error"));
+		}
+		
 		// Get the logger user's albums and export them to the web context
 		try {
 			List<Album> userAlbums = albumDAO.getFromCreator(user);
 			LinkedHashMap<Album, Image> albumThumbnail = albumDAO.getAlbumThumbnailMap();
 			LinkedHashMap<Album, Person> albumAuthor = albumDAO.getAlbumAuthorMap();
+			List<Image> userImages = imageDAO.getPersonImages(user);
 			
 			ctx.setVariable("userAlbums", userAlbums);
 			ctx.setVariable("allAlbums", albumAuthor.keySet());
 			ctx.setVariable("albumThumbnail", albumThumbnail);
 			ctx.setVariable("albumAuthor", albumAuthor);
+			ctx.setVariable("userImages", userImages);
 		} catch (SQLException e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}

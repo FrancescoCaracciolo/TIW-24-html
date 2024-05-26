@@ -53,30 +53,14 @@ public class CreateAlbumServlet extends ThymeleafServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// If a session doesn't exist or it's invalid, redirect to signin page
-		WebContext ctx = new WebContext(request, response, getServletContext(), response.getLocale());
-		// Get the logged user from the session and export it to the web context
-		Person user = (Person) request.getSession().getAttribute("user");
-
-		CreateAlbumUtility albumUtil = new CreateAlbumUtility(response, templateEngine, ctx, "create_album", imageDAO, user);
-
-		// Get the logger user's albums and export them to the web context
-		try {
-			albumUtil.validFromatData();
-		} catch (SQLException e) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
+		response.sendRedirect("home");
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// Check session
-		boolean isSessionInvalid = SessionUtility.redirectOnInvalidSession("logout", request, response);
-		if (isSessionInvalid)
-			return;
-		if (request.getParameter("image-title") != null) {
+		if (request.getParameter("upload-image-title") != null) {
 			// Do image upload
 			this.saveImage(request, response);
-		} else if (request.getParameter("album-title") != null) {
+		} else if (request.getParameter("create-album-title") != null) {
 			// Create album
 			this.createAlbum(request, response);
 		} else {
@@ -87,14 +71,12 @@ public class CreateAlbumServlet extends ThymeleafServlet {
 	private void createAlbum(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		Person user = (Person) request.getSession().getAttribute("user");
 
-		WebContext ctx = new WebContext(request, response, getServletContext(), response.getLocale());
-		CreateAlbumUtility albumUtil = new CreateAlbumUtility(response, templateEngine, ctx, "create_album", imageDAO, user);
-		ServletContext context = request.getServletContext();
+		CreateAlbumUtility albumUtil = new CreateAlbumUtility(response);
 
 		// Check title param
-		String title = request.getParameter("album-title");
+		String title = request.getParameter("create-album-title");
 		if (title == "" || title.length() > 30) {
-			albumUtil.invalidFormData("Wrong title given, the title must be at least one character and maximum 30 characters");
+			albumUtil.invalidRequest("Wrong title given, the title must be at least one character and maximum 30 characters");
 			return;
 		}
 
@@ -102,16 +84,17 @@ public class CreateAlbumServlet extends ThymeleafServlet {
 			// Get the list of the given parameters
 			Set<String> parameters = request.getParameterMap().keySet();
 			int[] ids = parameters.stream().filter(CreateAlbumUtility::isNumeric).mapToInt(Integer::parseInt).toArray();
+			
 			// Check that every id is an image from this user
 			for (int id : ids) {
 				Optional<Image> img = imageDAO.get(id);
 				if (img.isEmpty() || img.get().getUploaderId() != user.getId()) {
-					albumUtil.invalidFormData("Wrong image selected");
+					albumUtil.invalidRequest("Wrong image selected");
 					return;
 				}
 			}
 			if (ids.length < 1) {
-				albumUtil.invalidFormData("You have to choose at least one image to create an album");
+				albumUtil.invalidRequest("You have to choose at least one image to create an album");
 				return;
 			}
 
@@ -122,39 +105,37 @@ public class CreateAlbumServlet extends ThymeleafServlet {
 				if (request.getParameter(String.valueOf(id)).equals("on"))
 					albumDAO.addImage(album.get().getId(), id);
 			}
+			
 			// Send redirect to home
 			response.sendRedirect("home");
 		} catch (SQLException e) {
-			albumUtil.invalidFormData("Could not connect to the database");
+			albumUtil.invalidRequest("Could not connect to the database");
 			return;
 		}
 	}
 
-	private void saveImage(HttpServletRequest request, HttpServletResponse response)
-			throws IOException, ServletException {
+	private void saveImage(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Person user = (Person) request.getSession().getAttribute("user");
 
-		WebContext ctx = new WebContext(request, response, getServletContext(), response.getLocale());
-		CreateAlbumUtility albumUtil = new CreateAlbumUtility(response, templateEngine, ctx, "create_album", imageDAO,
-				user);
+		CreateAlbumUtility albumUtil = new CreateAlbumUtility(response);
 		ServletContext context = request.getServletContext();
 
 		// The user is trying to upload an image
-		String title = request.getParameter("image-title");
-		String description = request.getParameter("image-description");
+		String title = request.getParameter("upload-image-title");
+		String description = request.getParameter("upload-image-description");
 		if (title == null || title.isEmpty() || title.length() > 30) {
-			albumUtil.invalidFormData("Wrong title given, the title must be at least one character and maximum 30 characters");
+			albumUtil.invalidRequest("Wrong title given, the title must be at least one character and maximum 30 characters");
 			return;
 		}
 		if (description == null || description.isEmpty() || description.length() > 4096) {
-			albumUtil.invalidFormData("Wrong description given, the description must be at least one character and maximum 4096 characters");
+			albumUtil.invalidRequest("Wrong description given, the description must be at least one character and maximum 4096 characters");
 			return;	
 		}
 
 		// Receive the file
-		Part imagePart = request.getPart("image");
+		Part imagePart = request.getPart("upload-image-file");
 		if (imagePart.getContentType() != null && !imagePart.getContentType().split("/")[0].equals("image")) {
-			albumUtil.invalidFormData("The file given was not an image");
+			albumUtil.invalidRequest("The file given was not an image");
 			return;
 		}
 		InputStream imageContent = imagePart.getInputStream();
@@ -169,17 +150,17 @@ public class CreateAlbumServlet extends ThymeleafServlet {
 			Files.copy(imageContent, new File(full_path).toPath());
 		} catch (Exception e) {
 			e.printStackTrace();
-			albumUtil.invalidFormData("Error saving the file");
+			albumUtil.invalidRequest("Error saving the file");
 			return;
 		}
 		// Try saving the image in the database
 		try {
 			imageDAO.save(image_path, title, description, String.valueOf(user.getId()));
 		} catch (SQLException e) {
-			albumUtil.invalidFormData("Error connecting to the database");
+			albumUtil.invalidRequest("Error connecting to the database");
 			return;
 		}
-		response.sendRedirect("createAlbum");
+		response.sendRedirect("home");
 	}
 	
 	public void destroy() {

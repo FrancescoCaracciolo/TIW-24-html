@@ -55,11 +55,13 @@ public class ImageServlet extends ThymeleafServlet {
 		// Get the logged user from the session and export it to the web context
 		Person user = (Person) request.getSession().getAttribute("user");
 		ctx.setVariable("user", user);
+		
 		// Check for errors from addComment servlet
 		if (request.getParameter("error") != null) {
 			ctx.setVariable("error", true);
 			ctx.setVariable("errorMessage", request.getParameter("error"));
 		}
+		
 		// Parse and get image ID
 		if (!GeneralUtility.isValidNumericParameter(request.getParameter("imgId"))) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST);

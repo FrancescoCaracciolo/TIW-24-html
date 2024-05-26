@@ -2,18 +2,14 @@
     <head>
         <title>Home</title>
         <link rel="stylesheet" href="css/home.css" />
+        <link rel="stylesheet" href="css/createalbum.css"/>
         <!-- Set a viewport to make the design responsive -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </head>
     <body>
         <!-- Navbar -->
         <div class="navbar">
-            <!-- Section on left - create album button-->
-            <a href="create_album.html" th:href="createAlbum">
-                <button class="icon-button button">
-                    <img src="icons/add.svg" title="Create album" alt="Create" />
-                </button>
-            </a>
+        	<div></div>
             <!-- Section on right, username and logout button-->
             <div style="display: flex;">
                 <h1 th:text="${user.username}">Oingo</h1>
@@ -22,8 +18,67 @@
                 </a>
             </div>
         </div>
+        
+        <div class="create-album-form">
+            <div class="error-container" th:if="${error}">
+                <p th:text="${errorMessage}">The passwords are not equal</p>
+            </div>
+            
+            <!-- Upload image form-->
+            <h1>Upload a new image</h1>
+            <p>Choose the image, the title and the description and then click upload</p>
+            <form action="createAlbum" method="post" enctype="multipart/form-data">
+                <!-- Image title-->
+                <label class="input-label">Image title</label>
+                <br />
+                <input type="text" class="input" name="upload-image-title"/>
+                <br />
+                <!-- Image description -->
+                <label class="input-label">Image description</label>
+                <br />
+                <textarea class="input" name="upload-image-description" ></textarea>             
+                <!-- Image upload -->
+                <div style="display: flex; justify-content: center;">
+                    <input type="file" id="image-upload" name="upload-image-file" accept="image/*" hidden required/>
+                    <label for="image-upload" class="icon-button button">
+                            <img src="icons/upload.svg" title="Upload image" alt="Upload"/>
+                    </label>
+                    <input type="submit" style="margin-left: 5px" class="button accent-button" value="Upload" />
+                </div>
+            </form>
+            
+            <!-- Create album form -->
+            <h1>Create a new album</h1>
+            <form method="post" action="createAlbum">
+                <!-- Album title input -->
+                <label class="input-label">Album title</label>
+                <br />
+                <input class="input" type="text" name="create-album-title" required/>
+                <br />
+                
+                <h2>Album images</h2>
+                <div class="photos-list" th:remove="all-but-first">
+                    <!-- Photo list -->
+                    <div class="photo-check" th:object="${image}" th:each="image : ${userImages}">
+                        <input th:id="*{id}" th:name="*{id}" type="checkbox" name="checkbox" class="checkbox">
+                        <a th:href="@{/image(imgId=${image.id})}" href="image.html">
+                            <img th:src="'images/' + ${image.filePath}" src="img/test.jpg" class="checkbox-image" />
+                        </a>
+                    </div>
+                    <!-- Demo image -->
+                    <div class="photo-check">
+                        <input type="checkbox" name="checkbox" class="checkbox">
+                        <img src="img/test-portrait.jpg" class="checkbox-image" />
+                    </div>
+                </div>
+                <br />
+                <input type="submit" class="button accent-button" value="Create" />
+            </form>
+        </div>
+        
         <!-- Home page -->
         <div class="feed">
+        
             <!-- User albums -->
             <div class="album-container">
                 <div class="centerdiv">
@@ -45,6 +100,7 @@
                     </div>
                 </div>
             </div>
+            
             <!-- Other users albums -->
             <div class="album-container">
                 <div class="centerdiv">
