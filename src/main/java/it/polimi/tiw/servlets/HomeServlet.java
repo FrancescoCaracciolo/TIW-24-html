@@ -16,6 +16,7 @@ import it.polimi.tiw.beans.Image;
 import it.polimi.tiw.beans.Person;
 import it.polimi.tiw.dao.AlbumDAO;
 import it.polimi.tiw.dao.ImageDAO;
+import it.polimi.tiw.utils.Pair;
 
 @WebServlet("/home")
 public class HomeServlet extends ThymeleafServlet {
@@ -55,10 +56,15 @@ public class HomeServlet extends ThymeleafServlet {
 		// Get the logger user's albums and export them to the web context
 		try {
 			List<Album> userAlbums = albumDAO.getFromCreator(user);
-			LinkedHashMap<Album, Image> albumThumbnail = albumDAO.getAlbumThumbnailMap();
-			LinkedHashMap<Album, Person> albumAuthor = albumDAO.getAlbumAuthorMap();
-			List<Image> userImages = imageDAO.getPersonImages(user);
+			LinkedHashMap<Album, Pair<Person, Image>> albums = albumDAO.getAlbumThumbnailAndPersonMap();
+			LinkedHashMap<Album, Person> albumAuthor = new LinkedHashMap<>();
+			LinkedHashMap<Album, Image> albumThumbnail = new LinkedHashMap<>();
+			albums.forEach((album, p) -> {
+				albumAuthor.put(album, p.first());
+				albumThumbnail.put(album, p.second());
+			});
 			
+			List<Image> userImages = imageDAO.getPersonImages(user);
 			ctx.setVariable("userAlbums", userAlbums);
 			ctx.setVariable("allAlbums", albumAuthor.keySet());
 			ctx.setVariable("albumThumbnail", albumThumbnail);
