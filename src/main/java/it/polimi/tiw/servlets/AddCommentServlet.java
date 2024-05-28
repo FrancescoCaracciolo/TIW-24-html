@@ -51,14 +51,14 @@ public class AddCommentServlet extends ThymeleafServlet {
 		String text = request.getParameter("text");
 		
 		// Check validity of the parameters
-		if (!GeneralUtility.isValidNumericParameter(imgParameter) || text == null || text.equals("") ) {
+		if (!GeneralUtility.isValidNumericParameter(imgParameter)) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 			return;
 		}
 		// Check if the text is not too long
 		Integer imgId = Integer.parseInt(imgParameter);
-		if (text.length() > 4096) {
-			response.sendRedirect("image?imgId=" + String.valueOf(imgId) + "&albumId=" + request.getParameter("albumId") + "&error=" + URLEncoder.encode("The comment is too long", "UTF-8"));
+		if (text.length() > 4096 || text == null || text.equals("")) {
+			response.sendRedirect("image?imgId=" + String.valueOf(imgId) + "&albumId=" + request.getParameter("albumId") + "&error=" + URLEncoder.encode("The comment is too long or empty", "UTF-8"));
 			return;
 		}
 		try {
